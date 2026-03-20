@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: "/curriculum", label: "Curriculum" },
   { href: "/projects", label: "Projects" },
   { href: "/members", label: "Members" },
+  { href: "/gallery", label: "Gallery" },
 ];
 
 export default function Navbar() {
@@ -39,7 +40,7 @@ export default function Navbar() {
           : "border-b border-transparent bg-transparent",
       ].join(" ")}
     >
-      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+      <nav className="mx-auto flex h-[72px] max-w-6xl items-center justify-between px-6">
         {/* ── 이미지 로고 ── */}
         <a
           href="/"
@@ -49,9 +50,9 @@ export default function Navbar() {
           <Image
             src="https://i.ibb.co/xq5LMy14/001-18.png"
             alt="멋쟁이사자처럼 KSU 로고"
-            width={120}
-            height={36}
-            className="h-8 w-auto object-contain md:h-9"
+            width={180}
+            height={54}
+            className="h-12 w-auto object-contain md:h-14"
             priority
             unoptimized
           />

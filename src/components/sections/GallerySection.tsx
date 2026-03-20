@@ -105,7 +105,15 @@ function Lightbox({
           >
             {item.src ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={item.src} alt={item.alt} className="h-full w-full object-cover" />
+              <img
+                src={item.src}
+                alt={item.alt}
+                loading="eager"
+                decoding="async"
+                width={1200}
+                height={750}
+                className="h-full w-full object-cover"
+              />
             ) : (
               <Placeholder alt={item.alt} />
             )}
@@ -147,6 +155,7 @@ function Lightbox({
 /* ── 마르키 카드 ──────────────────────────────────── */
 function MarqueeCard({ item, onClick }: { item: GalleryItem; onClick: () => void }) {
   return (
+    // w-72(288px) × h-52(208px) 고정 → CLS 방지
     <div
       onClick={onClick}
       className="group relative h-52 w-72 shrink-0 cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-[#111]"
@@ -156,6 +165,10 @@ function MarqueeCard({ item, onClick }: { item: GalleryItem; onClick: () => void
         <img
           src={item.src}
           alt={item.alt}
+          loading="lazy"
+          decoding="async"
+          width={288}
+          height={208}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 grayscale group-hover:grayscale-0"
         />
       ) : (
@@ -222,6 +235,10 @@ function GridCard({ item, onClick }: { item: GalleryItem; onClick: () => void })
         <img
           src={item.src}
           alt={item.alt}
+          loading="lazy"
+          decoding="async"
+          width={400}
+          height={300}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 grayscale group-hover:grayscale-0"
         />
       ) : (

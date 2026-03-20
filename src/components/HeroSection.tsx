@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { motion, type Variants } from "framer-motion";
 
 /* ── 타이핑 애니메이션 훅 ──────────────────────────────── */
@@ -65,28 +66,29 @@ export default function HeroSection() {
 
   return (
     <section className="relative flex min-h-[90vh] max-h-[960px] items-center overflow-hidden md:min-h-[800px]">
-      {/* ── 배경 이미지: 모바일 — 크리스털, contain ── */}
-      <div
-        aria-hidden
-        className="absolute inset-0 md:hidden"
-        style={{
-          backgroundImage: "url('https://i.ibb.co/CKy8wgHv/Chat-GPT-Image-2026-3-20-06-42-45.png')",
-          backgroundSize: "contain",
-          backgroundPosition: "center center",
-          backgroundRepeat: "no-repeat",
-        }}
-      />
-      {/* ── 배경 이미지: 데스크톱 — 우측 치우침 + 패럴랙스 fixed ── */}
-      <div
-        aria-hidden
-        className="absolute inset-0 hidden md:block"
-        style={{
-          backgroundImage: "url('/hero-lion.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "80% center",
-          backgroundAttachment: "fixed",
-        }}
-      />
+      {/* ── 배경 이미지: 모바일 — Next.js Image, priority LCP ── */}
+      <div aria-hidden className="absolute inset-0 md:hidden">
+        <Image
+          src="https://i.ibb.co/CKy8wgHv/Chat-GPT-Image-2026-3-20-06-42-45.png"
+          alt=""
+          fill
+          priority
+          quality={90}
+          style={{ objectFit: "contain", objectPosition: "center" }}
+          // 로컬 최적화: public/mobile-hero.png 로 옮기면 src="/mobile-hero.png" 으로 교체
+        />
+      </div>
+      {/* ── 배경 이미지: 데스크톱 — Next.js Image, priority LCP ── */}
+      <div aria-hidden className="absolute inset-0 hidden md:block">
+        <Image
+          src="/hero-lion.png"
+          alt=""
+          fill
+          priority
+          quality={85}
+          style={{ objectFit: "cover", objectPosition: "80% center" }}
+        />
+      </div>
 
       {/* ── 모바일 전용 오버레이 — 짙은 어둠으로 가독성 확보 ── */}
       <div
@@ -210,9 +212,7 @@ export default function HeroSection() {
             className="flex flex-row gap-3"
           >
             <a
-              href="https://forms.gle/cuYPDcYcmB22nbDG8"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/apply"
               className="whitespace-nowrap rounded-full bg-[#6366F1] px-6 py-3 text-lg font-semibold text-white shadow-lg shadow-black/30 transition-all hover:bg-[#4f52d4] hover:shadow-[#6366F1]/30 md:px-7 md:py-3.5 md:text-sm"
             >
               지금 지원하기

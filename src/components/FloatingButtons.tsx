@@ -8,6 +8,7 @@ import { ChevronUp, ChevronDown, Send, X, MessageCircle } from "lucide-react";
 interface MessageButton {
   label: string;
   href: string;
+  external?: boolean; // false 이면 같은 탭 이동 (기본값 true)
 }
 
 interface Message {
@@ -94,8 +95,9 @@ function Bubble({ msg }: { msg: Message }) {
               <a
                 key={btn.href}
                 href={btn.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                {...(btn.external !== false
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
                 className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#6366f1]/40 bg-[#6366f1]/10 px-3.5 py-2 text-xs font-semibold text-[#6366f1] transition-colors hover:bg-[#6366f1]/20"
               >
                 {btn.label}
@@ -115,6 +117,9 @@ function ChatWindow({ onClose }: { onClose: () => void }) {
       id: 0,
       from: "bot",
       text: "안녕하세요! 경성대 멋쟁이사자처럼의 성장을 돕는 AI 어드바이저입니다. 무엇을 도와드릴까요? 🦁",
+      buttons: [
+        { label: "❓ 자주 묻는 질문 확인하기", href: "/apply#faq", external: false },
+      ],
     },
   ]);
   const [input, setInput] = useState("");

@@ -9,7 +9,7 @@ import {
 } from "framer-motion";
 
 /* ── D-Day 카운트다운 ──────────────────────────────────── */
-const DEADLINE = new Date("2026-03-15T23:59:59");
+const DEADLINE = new Date("2026-03-24T23:59:59");
 
 function useDDay() {
   const calc = () => {
@@ -84,7 +84,7 @@ const NOTICES = [
   },
   {
     q: "면접 및 선발 과정",
-    a: "서류 검토 후 합격자에 한해 대면 면접이 진행됩니다. 면접은 편안한 분위기로 진행되며, 열정과 의지를 중심으로 평가합니다.",
+    a: "14기는 면접 없이 서류 100% 선발로 진행됩니다. 지원서에 담긴 여러분의 열정과 의지만으로 평가합니다.",
   },
   {
     q: "프로젝트 팀 구성",
@@ -125,6 +125,81 @@ function AccordionItem({ q, a }: { q: string; a: string }) {
     </div>
   );
 }
+
+/* ── FaqItem (모집 FAQ 전용, 카드 스타일) ─────────────── */
+function FaqItem({ q, a, icon, delay }: { q: string; a: string; icon: string; delay?: number }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, ease: "easeOut", delay: delay ?? 0 }}
+      className={[
+        "overflow-hidden rounded-2xl border transition-colors duration-200",
+        open
+          ? "border-[#6366F1]/40 bg-[#6366F1]/5"
+          : "border-white/10 bg-white/[0.03] hover:border-white/20",
+      ].join(" ")}
+    >
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center gap-4 px-6 py-5 text-left"
+      >
+        {/* 아이콘 */}
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-lg">
+          {icon}
+        </span>
+        <span className="flex-1 text-sm font-semibold text-white">{q}</span>
+        <motion.span
+          animate={{ rotate: open ? 45 : 0 }}
+          transition={{ duration: 0.22 }}
+          className="shrink-0 text-xl font-light text-[#6366F1]"
+        >
+          +
+        </motion.span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.28, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <p className="border-t border-white/5 px-6 pb-6 pt-4 text-sm leading-relaxed text-zinc-400">
+              {a}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
+/* ── 14기 모집 FAQ ────────────────────────────────────── */
+const RECRUIT_FAQ = [
+  {
+    q: "Q1. 경성대 학생만 지원 가능한가요?",
+    a: "네, 경성대학교 재학생/휴학생이면 누구나 지원 가능합니다.",
+    icon: "🎓",
+  },
+  {
+    q: "Q2. 비전공자도 지원할 수 있나요? 코딩 실력이 중요한가요?",
+    a: "완전 가능합니다! 우리는 기술 스택보다는 '상상을 실행으로 옮기는 열정'을 가장 중요하게 생각합니다. 코딩 실력과 전공 여부는 선발 기준이 아닙니다.",
+    icon: "💡",
+  },
+  {
+    q: "Q3. 14기 선발 방식이 어떻게 되나요? 면접이 있나요?",
+    a: "14기는 '면접 없음·서류 100% 선발'로 진행됩니다. 오직 서류(지원서)에 담긴 여러분의 상상력과 실행력만 보고 선발합니다!",
+    icon: "✅",
+  },
+  {
+    q: "Q4. 활동 기간과 혜택이 궁금합니다.",
+    a: "활동 기간은 1년이며, 커리큘럼 이수 시 수료증 발급, 다양한 프로젝트 협업 기회, 현업 멘토링, 멋쟁이사자처럼 중앙 행사 참여 등 다양한 혜택을 제공합니다.",
+    icon: "🏆",
+  },
+];
 
 /* ── 페이지 ────────────────────────────────────────────── */
 const fadeUp = (
@@ -183,7 +258,7 @@ export default function ApplyPage() {
               모집 기간
             </p>
             <p className="mb-1 text-sm font-semibold text-white">
-              2026.03.01 – 2026.03.15
+              2026.03.01 – 2026.03.24
             </p>
             <p className="mb-5 text-xs text-zinc-500">마감까지 남은 시간</p>
             <Countdown />
@@ -220,11 +295,16 @@ export default function ApplyPage() {
             <p className="mb-4 text-xs font-bold uppercase tracking-widest text-[#6366F1]">
               선발 절차
             </p>
+            {/* 면접 없음 강조 뱃지 */}
+            <div className="mb-4 flex items-center gap-2 rounded-xl border border-[#22C55E]/20 bg-[#22C55E]/10 px-3 py-2">
+              <span className="text-base">✅</span>
+              <span className="text-xs font-bold text-[#22C55E]">면접 없음 · 서류 100% 선발</span>
+            </div>
             <div className="flex flex-col gap-3">
               {[
                 { step: "01", label: "서류 접수", icon: "📝" },
-                { step: "02", label: "면접", icon: "🎤" },
-                { step: "03", label: "최종 합격", icon: "🎉" },
+                { step: "02", label: "서류 검토", icon: "🔍" },
+                { step: "03", label: "최종 합격 발표", icon: "🎉" },
               ].map((s, i, arr) => (
                 <div key={s.step}>
                   <div className="flex items-center gap-3">
@@ -259,6 +339,28 @@ export default function ApplyPage() {
           </div>
         </motion.div>
 
+        {/* ── 14기 모집 FAQ ── */}
+        <motion.div id="faq" {...fadeUp(0.38)} className="mb-24 scroll-mt-24">
+          {/* 섹션 헤더 */}
+          <div className="mb-8 flex items-center gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#6366F1]/30 bg-[#6366F1]/10 px-4 py-1.5 text-sm font-medium text-[#6366F1]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#6366F1]" />
+              FAQ
+            </span>
+          </div>
+          <h2 className="mb-8 text-2xl font-extrabold text-white">
+            14기 모집 FAQ{" "}
+            <span className="text-[#6366F1]">자주 묻는 질문</span>
+          </h2>
+
+          {/* 아코디언 카드들 */}
+          <div className="space-y-3">
+            {RECRUIT_FAQ.map(({ q, a, icon }, idx) => (
+              <FaqItem key={idx} q={q} a={a} icon={icon} delay={idx * 0.06} />
+            ))}
+          </div>
+        </motion.div>
+
         {/* ── 대형 CTA 버튼 ── */}
         <motion.div {...fadeUp(0.4)} className="flex justify-center">
           <div className="relative">
@@ -270,13 +372,15 @@ export default function ApplyPage() {
               className="pointer-events-none absolute inset-0 rounded-full bg-[#6366F1]/30 blur-2xl"
             />
             <motion.a
-              href="#"
+              href="https://forms.gle/cuYPDcYcmB22nbDG8"
+              target="_blank"
+              rel="noopener noreferrer"
               whileHover={{ scale: 1.06 }}
               whileTap={{ scale: 0.97 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
               className="relative block rounded-full bg-gradient-to-r from-[#6366F1] to-[#818CF8] px-12 py-5 text-lg font-extrabold text-white shadow-[0_0_40px_rgba(99,102,241,0.5)] transition-shadow duration-300 hover:shadow-[0_0_60px_rgba(99,102,241,0.7)]"
             >
-              14기 지원서 작성하기 →
+              동의하고 지원서 작성하기 →
             </motion.a>
           </div>
         </motion.div>
