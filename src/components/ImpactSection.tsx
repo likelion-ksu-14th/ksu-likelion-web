@@ -97,40 +97,53 @@ interface StatCardProps {
 }
 
 function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps) {
-  const count = useCountUp(target, 1600, started);
+  const count = useCountUp(target, 1800, started);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 48 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.65, ease: "easeOut", delay }}
-      className="flex flex-col items-center gap-5 text-center"
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay }}
+      className="flex flex-col items-center gap-6 text-center"
     >
-      {/* 숫자 — 최대한 크게, 강렬한 그린 글로우 */}
+      {/* ── 숫자 — 화면 장악형 크기 + 3중 글로우 ── */}
       <p
-        className="tabular-nums text-7xl font-extrabold leading-none tracking-tight text-[#22C55E] md:text-8xl"
+        className="tabular-nums text-8xl font-black leading-none tracking-tighter text-[#22C55E] lg:text-9xl"
         style={{
-          textShadow:
-            "0 0 40px rgba(34,197,94,0.70), 0 0 80px rgba(34,197,94,0.35), 0 2px 8px rgba(0,0,0,0.9)",
-          filter: "drop-shadow(0 0 20px rgba(34,197,94,0.55))",
+          textShadow: [
+            "0 0  20px rgba(34,197,94,0.90)",   /* 1층: 가까운 코어 글로우 */
+            "0 0  60px rgba(34,197,94,0.55)",   /* 2층: 중간 확산 */
+            "0 0 120px rgba(34,197,94,0.25)",   /* 3층: 원거리 대기 */
+            "0  4px 16px rgba(0,0,0,0.95)",     /* 배경 대비 그림자 */
+          ].join(", "),
         }}
       >
-        {count}
-        {suffix}
+        {count}{suffix}
       </p>
 
-      {/* 구분선 */}
-      <div className="h-px w-12 rounded-full bg-gradient-to-r from-transparent via-[#22C55E]/40 to-transparent" />
+      {/* ── 그린 구분선 ── */}
+      <div
+        className="h-[2px] w-16 rounded-full"
+        style={{
+          background:
+            "linear-gradient(to right, transparent, rgba(34,197,94,0.70), transparent)",
+          boxShadow: "0 0 10px rgba(34,197,94,0.40)",
+        }}
+      />
 
-      {/* 타이틀 */}
-      <p className="text-xl font-bold text-white md:text-2xl"
-        style={{ textShadow: "0 1px 12px rgba(0,0,0,0.8)" }}>
+      {/* ── 타이틀 ── */}
+      <p
+        className="text-xl font-bold text-white md:text-2xl"
+        style={{ textShadow: "0 0 24px rgba(0,0,0,1), 0 2px 8px rgba(0,0,0,0.9)" }}
+      >
         {label}
       </p>
 
-      {/* 설명 */}
-      <p className="max-w-[240px] text-base leading-relaxed text-zinc-400">{sub}</p>
+      {/* ── 설명 ── */}
+      <p className="max-w-[240px] text-base leading-relaxed tracking-wide text-zinc-400">
+        {sub}
+      </p>
     </motion.div>
   );
 }
@@ -169,7 +182,7 @@ export default function ImpactSection() {
       {/* 중앙 그라디언트 마스크 — 배경이 너무 튀지 않게 */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_50%,transparent_40%,#0A0A0A_100%)]" />
 
-      <div className="relative z-10 mx-auto max-w-5xl">
+      <div className="relative z-10 mx-auto max-w-6xl">
         {/* 헤딩 */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}

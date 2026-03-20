@@ -44,13 +44,22 @@ export default function Navbar() {
 
     <header
       className={[
-        "fixed left-0 top-0 z-50 w-full transition-all duration-300",
+        "fixed left-0 top-0 z-50 w-full transition-all duration-500",
         scrolled
-          ? "border-b border-white/10 bg-black/50 backdrop-blur-md shadow-[0_1px_20px_rgba(0,0,0,0.4)]"
+          ? "border-b border-white/10 bg-black/70 backdrop-blur-xl shadow-[0_2px_32px_rgba(0,0,0,0.5)]"
           : "border-b border-transparent bg-transparent",
       ].join(" ")}
     >
-      <nav className="mx-auto flex h-[72px] max-w-6xl items-center justify-between px-6">
+      {/*
+        스크롤 전: py-5 md:py-7  → 넉넉한 여백, 로고가 숨쉬는 느낌
+        스크롤 후: py-3 md:py-4  → 컴팩트하게 축소 (화면 공간 확보)
+      */}
+      <nav
+        className={[
+          "mx-auto flex max-w-6xl items-center justify-between px-6 transition-all duration-500",
+          scrolled ? "py-3 md:py-4" : "py-5 md:py-7",
+        ].join(" ")}
+      >
         {/* ── 이미지 로고 ── */}
         <a
           href="/"
@@ -62,14 +71,17 @@ export default function Navbar() {
             alt="멋쟁이사자처럼 KSU 로고"
             width={180}
             height={54}
-            className="h-12 w-auto object-contain md:h-14"
+            className={[
+              "w-auto object-contain transition-all duration-500",
+              scrolled ? "h-10 md:h-11" : "h-12 md:h-14",
+            ].join(" ")}
             priority
             unoptimized
           />
         </a>
 
         {/* ── 중앙 메뉴 (데스크톱) ── */}
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-10 md:flex">
           {NAV_LINKS.map(({ href, label }) => {
             const active = pathname === href;
             return (
@@ -121,7 +133,7 @@ export default function Navbar() {
           menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
         ].join(" ")}
       >
-        <ul className="flex flex-col px-6 py-4">
+        <ul className="flex flex-col px-6 py-5">
           {NAV_LINKS.map(({ href, label }) => (
             <li key={href}>
               <Link
