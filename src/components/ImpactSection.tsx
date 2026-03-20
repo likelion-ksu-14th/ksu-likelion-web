@@ -101,18 +101,36 @@ function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps)
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 32 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.6, ease: "easeOut", delay }}
-      className="flex flex-col items-center gap-3 text-center"
+      transition={{ duration: 0.65, ease: "easeOut", delay }}
+      className="flex flex-col items-center gap-5 text-center"
     >
-      <p className="text-6xl font-extrabold tabular-nums text-[#22C55E] drop-shadow-[0_0_18px_rgba(34,197,94,0.5)] md:text-7xl">
+      {/* 숫자 — 최대한 크게, 강렬한 그린 글로우 */}
+      <p
+        className="tabular-nums text-7xl font-extrabold leading-none tracking-tight text-[#22C55E] md:text-8xl"
+        style={{
+          textShadow:
+            "0 0 40px rgba(34,197,94,0.70), 0 0 80px rgba(34,197,94,0.35), 0 2px 8px rgba(0,0,0,0.9)",
+          filter: "drop-shadow(0 0 20px rgba(34,197,94,0.55))",
+        }}
+      >
         {count}
         {suffix}
       </p>
-      <p className="text-xl font-bold text-white md:text-2xl">{label}</p>
-      <p className="max-w-[220px] text-base leading-relaxed text-zinc-500">{sub}</p>
+
+      {/* 구분선 */}
+      <div className="h-px w-12 rounded-full bg-gradient-to-r from-transparent via-[#22C55E]/40 to-transparent" />
+
+      {/* 타이틀 */}
+      <p className="text-xl font-bold text-white md:text-2xl"
+        style={{ textShadow: "0 1px 12px rgba(0,0,0,0.8)" }}>
+        {label}
+      </p>
+
+      {/* 설명 */}
+      <p className="max-w-[240px] text-base leading-relaxed text-zinc-400">{sub}</p>
     </motion.div>
   );
 }
@@ -144,7 +162,7 @@ export default function ImpactSection() {
   const isInView = useInView(ref, { once: true, amount: 0.35 });
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-[#0A0A0A] px-6 py-32">
+    <section ref={ref} className="relative overflow-hidden bg-[#0A0A0A] px-6 py-36 md:py-40">
       {/* 매트릭스 배경 */}
       <MatrixCanvas />
 
@@ -168,7 +186,7 @@ export default function ImpactSection() {
               14th Vision
             </span>
           </div>
-          <h2 className="text-3xl font-extrabold text-white md:text-5xl">
+          <h2 className="text-3xl font-extrabold text-white md:text-5xl lg:text-6xl">
             숫자로 보는{" "}
             <span className="text-[#22C55E]">14기의 목표</span>
           </h2>
@@ -180,7 +198,7 @@ export default function ImpactSection() {
         </div>
 
         {/* 통계 그리드 */}
-        <div className="grid grid-cols-1 gap-16 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-20 md:grid-cols-3 md:gap-8">
           {stats.map((s, i) => (
             <StatCard
               key={s.label}
