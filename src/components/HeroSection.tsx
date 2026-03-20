@@ -39,36 +39,33 @@ function HeroCountdown() {
   }
 
   const units = [
-    { value: days,    labelKo: "일",   labelEn: "DAYS"  },
-    { value: hours,   labelKo: "시간", labelEn: "HOURS" },
-    { value: minutes, labelKo: "분",   labelEn: "MINS"  },
-    { value: seconds, labelKo: "초",   labelEn: "SECS"  },
+    { value: days,    label: "DAYS"  },
+    { value: hours,   label: "HOURS" },
+    { value: minutes, label: "MINS"  },
+    { value: seconds, label: "SECS"  },
   ];
 
   return (
-    <div className="flex items-stretch gap-1.5 sm:gap-2">
-      {units.map(({ value, labelKo, labelEn }, i) => (
-        <div key={labelEn} className="flex items-center gap-1.5 sm:gap-2">
+    <div className="inline-flex items-center gap-1.5 sm:gap-2">
+      {units.map(({ value, label }, i) => (
+        <div key={label} className="flex items-center gap-1.5 sm:gap-2">
           {/* 숫자 박스 */}
-          <div className="flex min-w-[56px] flex-col items-center gap-1 rounded-xl border border-[#6366F1]/25 bg-black/60 px-3 py-2.5 backdrop-blur-md sm:min-w-[64px] sm:px-4 sm:py-3">
+          <div className="flex min-w-[56px] flex-col items-center gap-1 rounded-xl border border-[#6366F1]/25 bg-black/60 px-3 py-3 backdrop-blur-md sm:min-w-[64px] sm:px-4">
             <span className="tabular-nums text-2xl font-extrabold leading-none tracking-tight text-white sm:text-3xl">
               {String(value).padStart(2, "0")}
             </span>
             <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 sm:text-[11px]">
-              {labelEn}
-            </span>
-            <span className="text-[10px] font-medium text-zinc-600 sm:text-[11px]">
-              {labelKo}
+              {label}
             </span>
           </div>
-          {/* 구분자 (마지막 제외) */}
+          {/* 구분자 (마지막 제외) — items-center로 정확히 가운데 */}
           {i < units.length - 1 && (
-            <span className="mb-6 text-lg font-bold text-zinc-600 sm:text-xl">:</span>
+            <span className="text-lg font-bold leading-none text-zinc-600 sm:text-xl">:</span>
           )}
         </div>
       ))}
-      {/* 긴박감 표시 */}
-      <div className="ml-1 flex flex-col items-center justify-center gap-1 self-center">
+      {/* LIVE 인디케이터 */}
+      <div className="ml-1 flex flex-col items-center justify-center gap-1">
         <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
         <span className="text-[9px] font-bold uppercase tracking-widest text-red-500/70">live</span>
       </div>

@@ -258,47 +258,52 @@ export default function CurriculumPage() {
                 }}
               />
 
-              {/* 점 (Dot) */}
+              {/* 점 (Dot) — translate(-50%,-50%)로 dot 중앙이 선과 정확히 일치 */}
               {TIMELINE.map((item, i) => {
                 const topPct = 8 + i * (84 / (N - 1));
                 const isActive = activeIndex === i;
+                const dotSize = isActive ? 28 : 18;
                 return (
-                  <button
+                  <div
                     key={item.step}
-                    onClick={() => scrollToCard(i)}
-                    className="absolute left-1/2 flex -translate-x-1/2 items-center"
-                    style={{ top: `${topPct}%` }}
-                    aria-label={`${item.period}으로 이동`}
+                    className="absolute"
+                    style={{ top: `${topPct}%`, left: "50%", transform: "translate(-50%, -50%)" }}
                   >
-                    <div
-                      className="rounded-full border-[3px] border-black transition-all duration-500"
-                      style={
-                        isActive
-                          ? {
-                              width: 28, height: 28,
-                              background: `linear-gradient(135deg, ${ORANGE}, #fbbf24)`,
-                              boxShadow: `0 0 32px rgba(249,115,22,0.9), 0 0 56px rgba(249,115,22,0.5)`,
-                              animation: "pulse-dot 2s infinite",
-                            }
-                          : {
-                              width: 18, height: 18,
-                              background: `linear-gradient(135deg, ${ORANGE}, #fed7aa)`,
-                              boxShadow: `0 0 14px rgba(249,115,22,0.5)`,
-                            }
-                      }
-                    />
+                    {/* 기간 레이블 — dot 왼쪽에 절대 위치 */}
                     <span
-                      className="absolute whitespace-nowrap font-bold transition-all duration-300"
+                      className="absolute top-1/2 whitespace-nowrap font-bold transition-all duration-300"
                       style={{
-                        right: 36,
-                        fontSize: isActive ? 17 : 13,
+                        right: dotSize + 10,
+                        transform: "translateY(-50%)",
+                        fontSize: isActive ? 16 : 13,
                         color: isActive ? ORANGE : `rgba(249,115,22,0.3)`,
                         textShadow: isActive ? `0 0 18px rgba(249,115,22,0.8)` : "none",
                       }}
                     >
                       {item.period}
                     </span>
-                  </button>
+
+                    {/* 클릭 가능한 dot */}
+                    <button
+                      onClick={() => scrollToCard(i)}
+                      aria-label={`${item.period}으로 이동`}
+                      className="flex items-center justify-center"
+                      style={{ width: dotSize, height: dotSize }}
+                    >
+                      <div
+                        className="rounded-full border-[3px] border-black transition-all duration-500"
+                        style={{
+                          width: dotSize,
+                          height: dotSize,
+                          background: `linear-gradient(135deg, ${ORANGE}, ${isActive ? "#fbbf24" : "#fed7aa"})`,
+                          boxShadow: isActive
+                            ? `0 0 32px rgba(249,115,22,0.9), 0 0 56px rgba(249,115,22,0.5)`
+                            : `0 0 14px rgba(249,115,22,0.5)`,
+                          animation: isActive ? "pulse-dot 2s infinite" : "none",
+                        }}
+                      />
+                    </button>
+                  </div>
                 );
               })}
             </div>
@@ -372,9 +377,10 @@ export default function CurriculumPage() {
         }
 
         /* ── Dot pulse ──────────────────────────────── */
+        /* translateX는 부모 button에 이미 적용되어 있으므로 scale만 사용 */
         @keyframes pulse-dot {
-          0%, 100% { transform: translateX(-50%) scale(1); }
-          50%       { transform: translateX(-50%) scale(1.28); }
+          0%, 100% { transform: scale(1); }
+          50%       { transform: scale(1.30); }
         }
 
         /* ── shimmer slide ──────────────────────────── */
