@@ -4,6 +4,73 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, type Variants } from "framer-motion";
 
+/* ── 카운트다운 훅 ─────────────────────────────────── */
+const DEADLINE = new Date("2026-03-24T23:59:59");
+
+function useCountdown() {
+  const calc = () => {
+    const diff = DEADLINE.getTime() - Date.now();
+    if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, ended: true };
+    return {
+      days:    Math.floor(diff / 86_400_000),
+      hours:   Math.floor((diff % 86_400_000) / 3_600_000),
+      minutes: Math.floor((diff % 3_600_000) / 60_000),
+      seconds: Math.floor((diff % 60_000) / 1_000),
+      ended: false,
+    };
+  };
+  const [time, setTime] = useState(calc);
+  useEffect(() => {
+    const id = setInterval(() => setTime(calc()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
+}
+
+function CountdownUnit({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="flex flex-col items-center gap-0.5">
+      <span className="tabular-nums text-xl font-extrabold leading-none tracking-tight text-white md:text-2xl">
+        {String(value).padStart(2, "0")}
+      </span>
+      <span className="text-[9px] font-semibold uppercase tracking-widest text-zinc-500">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function HeroCountdown() {
+  const { days, hours, minutes, seconds, ended } = useCountdown();
+
+  if (ended) {
+    return (
+      <span className="rounded-full border border-zinc-700 bg-black/40 px-3 py-1.5 text-xs font-semibold text-zinc-500 backdrop-blur-sm">
+        모집이 마감되었습니다
+      </span>
+    );
+  }
+
+  const Sep = () => (
+    <span className="mb-3 text-base font-bold text-zinc-600">:</span>
+  );
+
+  return (
+    <div className="inline-flex items-end gap-2 rounded-2xl border border-[#6366F1]/25 bg-black/50 px-5 py-3 backdrop-blur-md">
+      {/* 긴박감 점 */}
+      <span className="mb-4 h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-red-500" />
+      <CountdownUnit value={days}    label="일" />
+      <Sep />
+      <CountdownUnit value={hours}   label="시간" />
+      <Sep />
+      <CountdownUnit value={minutes} label="분" />
+      <Sep />
+      <CountdownUnit value={seconds} label="초" />
+      <span className="mb-1 ml-1 text-[10px] font-semibold text-zinc-500">남음</span>
+    </div>
+  );
+}
+
 /* ── 타이핑 애니메이션 훅 ──────────────────────────────── */
 const LINES = ["상상을 실행으로,", "결과로 증명하다"];
 
@@ -201,6 +268,16 @@ export default function HeroSection() {
             <span className="rounded-full border border-[#22C55E]/30 bg-[#22C55E]/10 px-3 py-1 text-xs font-semibold text-[#22C55E] backdrop-blur-sm">
               ✅ 면접 없음 · 서류 100% 선발
             </span>
+          </motion.div>
+
+          {/* 카운트다운 */}
+          <motion.div
+            custom={0.42}
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+          >
+            <HeroCountdown />
           </motion.div>
 
           {/* CTA 버튼 */}

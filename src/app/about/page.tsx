@@ -176,9 +176,7 @@ export default function AboutPage() {
 
           <div className="relative mt-6">
             <a
-              href="https://forms.gle/cuYPDcYcmB22nbDG8"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/apply"
               className="inline-block rounded-full bg-[#6366F1] px-7 py-3 text-sm font-bold text-white transition-all hover:bg-[#4f52d4] hover:shadow-lg hover:shadow-[#6366F1]/30"
             >
               지금 지원하기 →

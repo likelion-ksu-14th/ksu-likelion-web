@@ -85,9 +85,7 @@ export default function Navbar() {
         {/* ── 오른쪽: CTA + 햄버거 ── */}
         <div className="flex items-center gap-4">
           <a
-            href="https://forms.gle/cuYPDcYcmB22nbDG8"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/apply"
             className="hidden rounded-full bg-[#6366F1] px-5 py-2 text-xs font-bold text-white transition-all hover:bg-[#4f52d4] hover:shadow-lg hover:shadow-[#6366F1]/30 md:inline-flex"
           >
             14기 지원하기
@@ -130,9 +128,7 @@ export default function Navbar() {
           ))}
           <li className="mt-4 pb-2">
             <a
-              href="https://forms.gle/cuYPDcYcmB22nbDG8"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/apply"
               onClick={() => setMenuOpen(false)}
               className="block rounded-full bg-[#6366F1] px-5 py-2.5 text-center text-sm font-bold text-white"
             >

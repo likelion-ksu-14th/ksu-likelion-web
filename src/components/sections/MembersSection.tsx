@@ -234,9 +234,7 @@ function InterviewModal({
                   경성대 멋쟁이사자처럼 14기에 지원하면 이 자리의 주인공이 될 수 있습니다.
                 </p>
                 <a
-                  href="https://forms.gle/cuYPDcYcmB22nbDG8"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/apply"
                   className="mt-2 rounded-full bg-[#6366F1] px-6 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(99,102,241,0.35)] transition-all hover:bg-[#4f52d4] hover:shadow-[0_0_28px_rgba(99,102,241,0.5)]"
                 >
                   지금 지원하기 →

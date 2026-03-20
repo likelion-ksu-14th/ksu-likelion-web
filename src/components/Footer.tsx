@@ -5,7 +5,7 @@ const QUICK_LINKS = [
   { href: "/curriculum", label: "Curriculum" },
   { href: "/projects", label: "Projects" },
   { href: "/members", label: "Members" },
-  { href: "https://forms.gle/cuYPDcYcmB22nbDG8", label: "지원하기", external: true },
+  { href: "/apply", label: "지원하기", external: false },
 ];
 
 /* SVG 아이콘 모음 */
@@ -160,9 +160,7 @@ export default function Footer() {
                 <p className="mt-0.5 text-sm text-slate-400">부담 없이 지원하세요!</p>
               </div>
               <a
-                href="https://forms.gle/cuYPDcYcmB22nbDG8"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/apply"
                 className="inline-block rounded-full bg-[#6366F1] px-4 py-2 text-center text-sm font-bold text-white transition-all hover:bg-[#4f52d4]"
               >
                 지금 지원하기 →
