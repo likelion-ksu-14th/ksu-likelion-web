@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     siteName: "경성대 멋쟁이사자처럼",
     images: [
       {
-        url: "https://i.ibb.co/dwb2bzk6/sfda.jpg",
+        url: "https://i.ibb.co/999mXBdD/sfda-1.jpg",
         width: 1200,
         height: 630,
         alt: "경성대 멋사 14기 공식 로고",
