@@ -19,9 +19,7 @@
 html {
   font-size: 16px;
   background-color: #050505 !important;   /* 모바일 바운스 시 흰색 노출 방지 */
-  overscroll-behavior: none;              /* 바운스 스크롤 차단 */
-  height: 100%;
-  overflow: hidden;                       /* html 자체 스크롤 제거 → body가 담당 */
+  overscroll-behavior: none;              /* 탄성(바운스) 억제만 — overflow는 건드리지 않음 */
 }
 
 body {
@@ -32,9 +30,7 @@ body {
   font-size: 1rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overscroll-behavior: none;              /* iOS/Android 바운스 차단 */
-  height: 100%;
-  overflow-y: auto;                       /* 스크롤은 body 내부에서만 동작 */
+  overscroll-behavior: none;              /* iOS/Android 바운스 억제 */
   -webkit-overflow-scrolling: touch;      /* iOS 관성 스크롤 유지 */
 }
 
