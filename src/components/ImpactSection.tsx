@@ -9,34 +9,34 @@ import { motion, useInView } from "framer-motion";
 ──────────────────────────────────────────────────────────── */
 const FORCE_STYLES = `
   .impact-number {
-    font-size: clamp(4.5rem, 13vw, 9.5rem) !important;
+    font-size: clamp(3.5rem, 10vw, 7.5rem) !important;
     font-weight: 900 !important;
     line-height: 1 !important;
     letter-spacing: -0.04em !important;
     color: #22C55E !important;
     font-variant-numeric: tabular-nums !important;
     text-shadow:
-      0 0  24px rgba(34,197,94,0.95),
-      0 0  70px rgba(34,197,94,0.60),
-      0 0 150px rgba(34,197,94,0.28),
-      0  6px 20px rgba(0,0,0,0.98) !important;
+      0 0  20px rgba(34,197,94,0.95),
+      0 0  58px rgba(34,197,94,0.60),
+      0 0 120px rgba(34,197,94,0.28),
+      0  5px 16px rgba(0,0,0,0.98) !important;
     display: block !important;
   }
   .impact-label {
-    font-size: clamp(1.25rem, 2.5vw, 1.75rem) !important;
+    font-size: clamp(1.1rem, 2vw, 1.45rem) !important;
     font-weight: 700 !important;
     color: #ffffff !important;
     text-shadow: 0 0 24px rgba(0,0,0,1), 0 2px 8px rgba(0,0,0,0.9) !important;
   }
   .impact-sub {
-    font-size: clamp(1rem, 1.4vw, 1.125rem) !important;
+    font-size: clamp(1rem, 1.2vw, 1.05rem) !important;
     line-height: 1.75 !important;
     letter-spacing: 0.03em !important;
     color: #a1a1aa !important;
     max-width: 240px !important;
   }
   .impact-heading {
-    font-size: clamp(1.875rem, 5vw, 3.75rem) !important;
+    font-size: clamp(1.6rem, 4vw, 3.1rem) !important;
     font-weight: 800 !important;
     line-height: 1.2 !important;
     color: #ffffff !important;
@@ -133,7 +133,7 @@ interface StatCardProps {
 }
 
 function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps) {
-  const count = useCountUp(target, 4500, started);
+  const count = useCountUp(target, 2200, started);
 
   return (
     <motion.div

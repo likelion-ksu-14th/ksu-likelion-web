@@ -142,7 +142,7 @@ export default function Footer() {
               <div className="flex flex-col gap-1.5">
                 <p className="text-sm font-semibold text-slate-200">모집 대상</p>
                 <p className="text-sm leading-relaxed text-slate-400">
-                  경성대 재학생 · 휴학생 · 수료생 · 졸업유예생
+                  경성대 재학생 · 휴학생 · 편입생 · 졸업유예생
                 </p>
               </div>
               <div className="flex flex-wrap gap-1.5">
