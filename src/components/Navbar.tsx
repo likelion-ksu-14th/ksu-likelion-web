@@ -32,6 +32,16 @@ export default function Navbar() {
   }, [menuOpen]);
 
   return (
+    <>
+    {/* ── 모바일 메뉴 오버레이 — 터치 시 메뉴 닫기 ── */}
+    {menuOpen && (
+      <div
+        aria-hidden
+        className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+        onClick={() => setMenuOpen(false)}
+      />
+    )}
+
     <header
       className={[
         "fixed left-0 top-0 z-50 w-full transition-all duration-300",
@@ -67,7 +77,7 @@ export default function Navbar() {
                 <Link
                   href={href}
                   className={[
-                    "relative text-sm font-medium transition-colors duration-200",
+                    "relative text-base font-medium transition-colors duration-200",
                     "after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-full",
                     "after:origin-left after:scale-x-0 after:bg-[#6366F1]",
                     "after:transition-transform after:duration-200",
@@ -86,7 +96,7 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           <a
             href="/apply"
-            className="hidden rounded-full bg-[#6366F1] px-5 py-2 text-xs font-bold text-white transition-all hover:bg-[#4f52d4] hover:shadow-lg hover:shadow-[#6366F1]/30 md:inline-flex"
+            className="hidden rounded-full bg-[#6366F1] px-5 py-2 text-sm font-bold text-white transition-all hover:bg-[#4f52d4] hover:shadow-lg hover:shadow-[#6366F1]/30 md:inline-flex"
           >
             14기 지원하기
           </a>
@@ -118,7 +128,7 @@ export default function Navbar() {
                 href={href}
                 onClick={() => setMenuOpen(false)}
                 className={[
-                  "block py-3 text-sm font-medium transition-colors duration-200 hover:text-white",
+                  "block py-3 text-base font-medium transition-colors duration-200 hover:text-white",
                   pathname === href ? "text-white" : "text-zinc-400",
                 ].join(" ")}
               >
@@ -138,5 +148,6 @@ export default function Navbar() {
         </ul>
       </div>
     </header>
+    </>
   );
 }

@@ -161,7 +161,7 @@ function InterviewModal({
 
       {/* 모달 패널 */}
       <motion.div
-        className="relative z-10 w-full max-w-2xl overflow-hidden rounded-3xl border border-white/10 bg-[#111111] shadow-[0_0_60px_rgba(99,102,241,0.15)]"
+        className="relative z-10 flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#111111] shadow-[0_0_60px_rgba(99,102,241,0.15)]"
         initial={{ opacity: 0, y: 32, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 16, scale: 0.97 }}
@@ -186,7 +186,7 @@ function InterviewModal({
           <X className="h-4 w-4" />
         </button>
 
-        <div className="flex flex-col sm:flex-row">
+        <div className="flex min-h-0 flex-1 flex-col sm:flex-row">
           {/* 왼쪽 — 프로필 */}
           <div className="flex flex-col items-center gap-4 border-b border-white/5 bg-white/[0.02] p-8 sm:w-56 sm:border-b-0 sm:border-r sm:p-10">
             {/* 아바타 */}
@@ -226,7 +226,7 @@ function InterviewModal({
           </div>
 
           {/* 오른쪽 — 인터뷰 */}
-          <div className="flex-1 overflow-y-auto p-8 sm:max-h-[520px]">
+          <div className="modal-scroll flex-1 overflow-y-auto p-8">
             {isRecruiting || member.questions.length === 0 ? (
               /* 모집 중 안내 */
               <div className="flex h-full flex-col items-center justify-center gap-4 py-10 text-center">
@@ -379,11 +379,11 @@ function LeadInterview() {
           </div>
           {/* 텍스트 */}
           <div className="flex flex-col gap-1 sm:items-center sm:text-center">
-            <span className="rounded-full border border-[#6366F1]/30 bg-[#6366F1]/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[#6366F1]">
+            <span className="w-fit self-start rounded-full border border-[#6366F1]/30 bg-[#6366F1]/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-widest text-[#6366F1] sm:self-center">
               Lead
             </span>
             <p className="mt-1 text-base font-extrabold text-white">김민교</p>
-            <p className="text-[11px] leading-relaxed text-zinc-500">
+            <p className="text-xs leading-relaxed text-zinc-500">
               경성대 멋쟁이사자처럼<br className="hidden sm:block" /> 14기 대표
             </p>
           </div>
@@ -498,6 +498,19 @@ export default function MembersSection() {
           <InterviewModal member={selected} onClose={() => setSelected(null)} />
         )}
       </AnimatePresence>
+
+      {/* 커스텀 스크롤바 — 흑요석 테마 */}
+      <style>{`
+        .modal-scroll::-webkit-scrollbar { width: 4px; }
+        .modal-scroll::-webkit-scrollbar-track { background: transparent; }
+        .modal-scroll::-webkit-scrollbar-thumb {
+          background: rgba(99,102,241,0.30);
+          border-radius: 9999px;
+        }
+        .modal-scroll::-webkit-scrollbar-thumb:hover {
+          background: rgba(99,102,241,0.55);
+        }
+      `}</style>
     </>
   );
 }

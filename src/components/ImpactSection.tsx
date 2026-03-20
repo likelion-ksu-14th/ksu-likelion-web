@@ -111,8 +111,8 @@ function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps)
         {count}
         {suffix}
       </p>
-      <p className="text-lg font-bold text-white">{label}</p>
-      <p className="max-w-[200px] text-sm leading-relaxed text-zinc-500">{sub}</p>
+      <p className="text-xl font-bold text-white md:text-2xl">{label}</p>
+      <p className="max-w-[220px] text-base leading-relaxed text-zinc-500">{sub}</p>
     </motion.div>
   );
 }

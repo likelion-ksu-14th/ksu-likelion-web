@@ -75,7 +75,7 @@ export default function WhySection() {
               </h3>
 
               {/* 설명 */}
-              <p className="text-sm leading-relaxed text-zinc-400 transition-colors duration-300 group-hover:text-zinc-300">
+              <p className="text-base leading-relaxed text-zinc-400 transition-colors duration-300 group-hover:text-zinc-300">
                 {card.description}
               </p>
             </motion.div>

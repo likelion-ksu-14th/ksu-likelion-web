@@ -30,13 +30,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 모바일: 본문·설명글 최소 16px 강제 */
-@media (max-width: 640px) {
-  p, li, label, .mobile-readable {
-    font-size: max(1rem, 1em);
-    line-height: 1.7;
-  }
+/* 전역: 본문·설명글 최소 16px 강제 (데스크톱·모바일 공통) */
+p, li, label, .mobile-readable {
+  font-size: max(1rem, 1em);
+  line-height: 1.7;
 }
+
+/* 단, 배지·태그·캡션 등 의도적으로 작은 요소는 클래스 단위로 예외 허용 */
 
 @keyframes blink {
   0%, 100% { opacity: 1; }

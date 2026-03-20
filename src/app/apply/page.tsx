@@ -217,19 +217,15 @@ export default function ApplyPage() {
           {/* 모집 기간 */}
           <motion.div
             {...fadeUp(0.1)}
-            className="rounded-2xl border border-white/10 bg-white/[0.03] p-6"
+            className="flex flex-col items-center rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center"
           >
-            <p className="mb-4 text-xs font-bold uppercase tracking-widest text-[#6366F1]">
+            <p className="mb-5 text-xs font-bold uppercase tracking-widest text-[#6366F1]">
               모집 기간
             </p>
-            <p className="text-2xl font-extrabold text-white">
-              2026.03.01
-            </p>
-            <p className="mt-1 text-sm text-zinc-500">–</p>
-            <p className="text-2xl font-extrabold text-white">
-              2026.03.24
-            </p>
-            <p className="mt-3 text-xs text-zinc-500">서류 마감 3월 24일 자정</p>
+            <p className="text-4xl font-extrabold leading-tight text-white">2026.03.01</p>
+            <p className="my-2 text-2xl font-bold text-zinc-600">–</p>
+            <p className="text-4xl font-extrabold leading-tight text-white">2026.03.24</p>
+            <p className="mt-5 text-base text-zinc-500">서류 마감 3월 24일 자정</p>
           </motion.div>
 
           {/* 지원 자격 */}
