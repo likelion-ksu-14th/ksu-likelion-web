@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ExternalLink } from "lucide-react";
+import { X } from "lucide-react";
 
 /* ── 타입 ───────────────────────────────────────────────── */
 type Category = "전체" | "웹" | "AI" | "앱";
@@ -131,15 +131,6 @@ function ImageModal({
               <p className="text-xs text-zinc-500">{project.subtitle}</p>
             </div>
             <div className="flex items-center gap-2">
-              <a
-                href={project.image}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs text-zinc-400 transition hover:border-white/30 hover:text-white"
-              >
-                <ExternalLink className="h-3 w-3" />
-                원본 보기
-              </a>
               <button
                 onClick={onClose}
                 className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 text-zinc-500 transition hover:border-white/30 hover:text-white"

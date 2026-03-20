@@ -3,6 +3,49 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 
+/* ────────────────────────────────────────────────────────────
+   !important 강제 스타일 — 전역 CSS·Tailwind 퍼지 완전 무력화
+   React style 객체는 !important 미지원 → <style> 태그로 우회
+──────────────────────────────────────────────────────────── */
+const FORCE_STYLES = `
+  .impact-number {
+    font-size: clamp(4rem, 15vw, 12rem) !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    letter-spacing: -0.04em !important;
+    color: #22C55E !important;
+    font-variant-numeric: tabular-nums !important;
+    text-shadow:
+      0 0  28px rgba(34,197,94,0.95),
+      0 0  80px rgba(34,197,94,0.60),
+      0 0 180px rgba(34,197,94,0.28),
+      0  8px 24px rgba(0,0,0,0.98) !important;
+    display: block !important;
+  }
+  .impact-label {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem) !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    text-shadow: 0 0 24px rgba(0,0,0,1), 0 2px 8px rgba(0,0,0,0.9) !important;
+  }
+  .impact-sub {
+    font-size: clamp(1rem, 1.4vw, 1.125rem) !important;
+    line-height: 1.75 !important;
+    letter-spacing: 0.03em !important;
+    color: #a1a1aa !important;
+    max-width: 240px !important;
+  }
+  .impact-heading {
+    font-size: clamp(1.875rem, 5vw, 3.75rem) !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    color: #ffffff !important;
+  }
+  .impact-section {
+    padding: 10rem 1.5rem !important;
+  }
+`;
+
 /* ── 카운트업 훅 ───────────────────────────────────────── */
 function useCountUp(target: number, durationMs: number, started: boolean) {
   const [count, setCount] = useState(0);
@@ -35,7 +78,7 @@ function MatrixCanvas() {
     if (!ctx) return;
 
     const resize = () => {
-      canvas.width = canvas.offsetWidth;
+      canvas.width  = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
     };
     resize();
@@ -43,21 +86,18 @@ function MatrixCanvas() {
     const FONT_SIZE = 13;
     const CHARS = "0123456789%+".split("");
     let columns = Math.floor(canvas.width / FONT_SIZE);
-    let drops = Array<number>(columns).fill(1);
+    let drops   = Array<number>(columns).fill(1);
 
     const draw = () => {
       ctx.fillStyle = "rgba(10,10,10,0.06)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
       ctx.font = `${FONT_SIZE}px monospace`;
 
       drops.forEach((y, i) => {
-        const char = CHARS[Math.floor(Math.random() * CHARS.length)];
-        // 앞쪽 글자는 밝게, 꼬리는 어둡게
+        const char  = CHARS[Math.floor(Math.random() * CHARS.length)];
         const alpha = Math.random() > 0.92 ? 0.55 : 0.12;
         ctx.fillStyle = `rgba(34,197,94,${alpha})`;
         ctx.fillText(char, i * FONT_SIZE, y * FONT_SIZE);
-
         if (y * FONT_SIZE > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       });
@@ -68,20 +108,16 @@ function MatrixCanvas() {
     const onResize = () => {
       resize();
       columns = Math.floor(canvas.width / FONT_SIZE);
-      drops = Array<number>(columns).fill(1);
+      drops   = Array<number>(columns).fill(1);
     };
     window.addEventListener("resize", onResize);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener("resize", onResize);
-    };
+    return () => { clearInterval(interval); window.removeEventListener("resize", onResize); };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="pointer-events-none absolute inset-0 h-full w-full"
+      style={{ pointerEvents: "none", position: "absolute", inset: 0, width: "100%", height: "100%" }}
     />
   );
 }
@@ -105,45 +141,34 @@ function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps)
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay }}
-      className="flex flex-col items-center gap-6 text-center"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "1.75rem",
+        textAlign: "center",
+      }}
     >
-      {/* ── 숫자 — 화면 장악형 크기 + 3중 글로우 ── */}
-      <p
-        className="tabular-nums text-8xl font-black leading-none tracking-tighter text-[#22C55E] md:text-9xl"
-        style={{
-          textShadow: [
-            "0 0  24px rgba(34,197,94,0.95)",   /* 1층: 코어 */
-            "0 0  72px rgba(34,197,94,0.60)",   /* 2층: 확산 */
-            "0 0 160px rgba(34,197,94,0.28)",   /* 3층: 대기 */
-            "0  6px 20px rgba(0,0,0,0.98)",     /* 배경 대비 */
-          ].join(", "),
-        }}
-      >
-        {count}{suffix}
-      </p>
+      {/* 숫자 — !important 클래스로 크기 강제 */}
+      <p className="impact-number">{count}{suffix}</p>
 
-      {/* ── 그린 구분선 ── */}
+      {/* 그린 구분선 */}
       <div
-        className="h-[2px] w-16 rounded-full"
         style={{
-          background:
-            "linear-gradient(to right, transparent, rgba(34,197,94,0.70), transparent)",
-          boxShadow: "0 0 10px rgba(34,197,94,0.40)",
+          height: "2px",
+          width: "72px",
+          borderRadius: "9999px",
+          background: "linear-gradient(to right, transparent, rgba(34,197,94,0.75), transparent)",
+          boxShadow: "0 0 14px rgba(34,197,94,0.45)",
+          flexShrink: 0,
         }}
       />
 
-      {/* ── 타이틀 ── */}
-      <p
-        className="text-xl font-bold text-white md:text-2xl"
-        style={{ textShadow: "0 0 24px rgba(0,0,0,1), 0 2px 8px rgba(0,0,0,0.9)" }}
-      >
-        {label}
-      </p>
+      {/* 타이틀 */}
+      <p className="impact-label">{label}</p>
 
-      {/* ── 설명 ── */}
-      <p className="max-w-[240px] text-base leading-relaxed tracking-wide text-zinc-400">
-        {sub}
-      </p>
+      {/* 설명 */}
+      <p className="impact-sub">{sub}</p>
     </motion.div>
   );
 }
@@ -171,57 +196,94 @@ const stats = [
 ];
 
 export default function ImpactSection() {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref     = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.35 });
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-[#0A0A0A] px-6 py-40 md:py-48">
-      {/* 매트릭스 배경 */}
-      <MatrixCanvas />
+    <>
+      {/* !important 스타일 주입 — 전역 CSS 오버라이드 */}
+      <style dangerouslySetInnerHTML={{ __html: FORCE_STYLES }} />
 
-      {/* 중앙 그라디언트 마스크 — 배경이 너무 튀지 않게 */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_50%,transparent_40%,#0A0A0A_100%)]" />
+      <section
+        ref={ref}
+        className="impact-section"
+        style={{ position: "relative", overflow: "hidden", background: "#0A0A0A" }}
+      >
+        {/* 매트릭스 배경 */}
+        <MatrixCanvas />
 
-      <div className="relative z-10 mx-auto max-w-6xl">
-        {/* 헤딩 */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="mb-20 text-center"
-        >
-          <div className="mb-4 flex items-center justify-center gap-3">
-            <p className="text-sm font-semibold uppercase tracking-widest text-[#22C55E]">
-              Impact
-            </p>
-            <span className="rounded-full border border-[#22C55E]/40 bg-[#22C55E]/10 px-3 py-0.5 text-xs font-bold tracking-widest text-[#22C55E]">
-              14th Vision
-            </span>
+        {/* 중앙 그라디언트 마스크 */}
+        <div
+          aria-hidden
+          style={{
+            pointerEvents: "none",
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(ellipse 60% 60% at 50% 50%, transparent 40%, #0A0A0A 100%)",
+          }}
+        />
+
+        <div style={{ position: "relative", zIndex: 10, margin: "0 auto", maxWidth: "80rem" }}>
+
+          {/* ── 헤딩 ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            style={{ marginBottom: "5rem", textAlign: "center" }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+              <p style={{ fontSize: "0.875rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", color: "#22C55E" }}>
+                Impact
+              </p>
+              <span style={{
+                borderRadius: "9999px",
+                border: "1px solid rgba(34,197,94,0.40)",
+                background: "rgba(34,197,94,0.10)",
+                padding: "0.125rem 0.75rem",
+                fontSize: "0.75rem",
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                color: "#22C55E",
+              }}>
+                14th Vision
+              </span>
+            </div>
+
+            <h2 className="impact-heading">
+              숫자로 보는{" "}
+              <span style={{ color: "#22C55E" }}>14기의 목표</span>
+            </h2>
+          </motion.div>
+
+          {/* ── 구분선 ── */}
+          <div style={{
+            marginBottom: "5rem",
+            height: "1px",
+            background: "linear-gradient(to right, transparent, rgba(255,255,255,0.10), transparent)",
+          }} />
+
+          {/* ── 통계 그리드 — auto-fit으로 1→3열 자동 전환 ── */}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "4rem 3rem",
+            alignItems: "start",
+          }}>
+            {stats.map((s, i) => (
+              <StatCard
+                key={s.label}
+                {...s}
+                started={isInView}
+                delay={i * 0.12}
+              />
+            ))}
           </div>
-          <h2 className="text-3xl font-extrabold text-white md:text-5xl lg:text-6xl">
-            숫자로 보는{" "}
-            <span className="text-[#22C55E]">14기의 목표</span>
-          </h2>
-        </motion.div>
 
-        {/* 구분선 */}
-        <div className="mb-20 flex items-center gap-6">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         </div>
-
-        {/* 통계 그리드 */}
-        <div className="grid grid-cols-1 gap-20 md:grid-cols-3 md:gap-8">
-          {stats.map((s, i) => (
-            <StatCard
-              key={s.label}
-              {...s}
-              started={isInView}
-              delay={i * 0.12}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
