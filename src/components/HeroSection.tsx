@@ -1,19 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { motion, type Variants } from "framer-motion";
 
-/* ── 카운트다운 훅 ─────────────────────────────────── */
+// Three.js scene — client-only, lazy loaded
+const HeroScene3D = dynamic(() => import("./HeroScene3D"), { ssr: false });
+
+// ─────────────────────────────────────────────────────────
+// Countdown hook
+// ─────────────────────────────────────────────────────────
 const DEADLINE = new Date("2026-03-24T23:59:59");
 
 function useCountdown() {
   const calc = () => {
     const diff = DEADLINE.getTime() - Date.now();
-    if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, ended: true };
+    if (diff <= 0)
+      return { days: 0, hours: 0, minutes: 0, seconds: 0, ended: true };
     return {
-      days:    Math.floor(diff / 86_400_000),
-      hours:   Math.floor((diff % 86_400_000) / 3_600_000),
+      days: Math.floor(diff / 86_400_000),
+      hours: Math.floor((diff % 86_400_000) / 3_600_000),
       minutes: Math.floor((diff % 3_600_000) / 60_000),
       seconds: Math.floor((diff % 60_000) / 1_000),
       ended: false,
@@ -39,17 +46,16 @@ function HeroCountdown() {
   }
 
   const units = [
-    { value: days,    label: "DAYS"  },
-    { value: hours,   label: "HOURS" },
-    { value: minutes, label: "MINS"  },
-    { value: seconds, label: "SECS"  },
+    { value: days, label: "DAYS" },
+    { value: hours, label: "HOURS" },
+    { value: minutes, label: "MINS" },
+    { value: seconds, label: "SECS" },
   ];
 
   return (
     <div className="inline-flex items-center gap-1.5 sm:gap-2">
       {units.map(({ value, label }, i) => (
         <div key={label} className="flex items-center gap-1.5 sm:gap-2">
-          {/* 숫자 박스 */}
           <div className="flex min-w-[56px] flex-col items-center gap-1 rounded-xl border border-[#6366F1]/25 bg-black/60 px-3 py-3 backdrop-blur-md sm:min-w-[64px] sm:px-4">
             <span className="tabular-nums text-2xl font-extrabold leading-none tracking-tight text-white sm:text-3xl">
               {String(value).padStart(2, "0")}
@@ -58,22 +64,26 @@ function HeroCountdown() {
               {label}
             </span>
           </div>
-          {/* 구분자 (마지막 제외) — items-center로 정확히 가운데 */}
           {i < units.length - 1 && (
-            <span className="text-lg font-bold leading-none text-zinc-600 sm:text-xl">:</span>
+            <span className="text-lg font-bold leading-none text-zinc-600 sm:text-xl">
+              :
+            </span>
           )}
         </div>
       ))}
-      {/* LIVE 인디케이터 */}
       <div className="ml-1 flex flex-col items-center justify-center gap-1">
         <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
-        <span className="text-[9px] font-bold uppercase tracking-widest text-red-500/70">live</span>
+        <span className="text-[9px] font-bold uppercase tracking-widest text-red-500/70">
+          live
+        </span>
       </div>
     </div>
   );
 }
 
-/* ── 타이핑 애니메이션 훅 ──────────────────────────────── */
+// ─────────────────────────────────────────────────────────
+// Typing animation hook
+// ─────────────────────────────────────────────────────────
 const LINES = ["상상을 실행으로,", "결과로 증명하다"];
 
 function useTypingLines(lines: string[], speed = 55, pauseMs = 500) {
@@ -86,7 +96,10 @@ function useTypingLines(lines: string[], speed = 55, pauseMs = 500) {
     let timeout: ReturnType<typeof setTimeout>;
 
     const type = () => {
-      if (lineIdx >= lines.length) { setDone(true); return; }
+      if (lineIdx >= lines.length) {
+        setDone(true);
+        return;
+      }
       const current = lines[lineIdx];
       if (charIdx <= current.length) {
         setDisplayed((prev) => {
@@ -115,7 +128,9 @@ function useTypingLines(lines: string[], speed = 55, pauseMs = 500) {
   return { displayed, done };
 }
 
-/* ── fadeUp variant ───────────────────────────────────── */
+// ─────────────────────────────────────────────────────────
+// Shared animation variant
+// ─────────────────────────────────────────────────────────
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
   visible: (delay: number) => ({
@@ -129,13 +144,17 @@ const fadeUp: Variants = {
   }),
 };
 
-/* ── HeroSection ─────────────────────────────────────── */
+// ─────────────────────────────────────────────────────────
+// HeroSection
+// ─────────────────────────────────────────────────────────
 export default function HeroSection() {
   const { displayed, done } = useTypingLines(LINES);
 
   return (
     <section className="relative flex min-h-[90vh] max-h-[960px] items-center overflow-hidden md:min-h-[800px]">
-      {/* ── 배경 이미지: 모바일 — Next.js Image, priority LCP ── */}
+
+      {/* ── Layer 1: Background images ──────────────────── */}
+      {/* Mobile — vertical atmospheric image */}
       <div aria-hidden className="absolute inset-0 md:hidden">
         <Image
           src="https://i.ibb.co/CKy8wgHv/Chat-GPT-Image-2026-3-20-06-42-45.png"
@@ -143,11 +162,10 @@ export default function HeroSection() {
           fill
           priority
           quality={90}
-          style={{ objectFit: "contain", objectPosition: "center" }}
-          // 로컬 최적화: public/mobile-hero.png 로 옮기면 src="/mobile-hero.png" 으로 교체
+          style={{ objectFit: "cover", objectPosition: "center" }}
         />
       </div>
-      {/* ── 배경 이미지: 데스크톱 — Next.js Image, priority LCP ── */}
+      {/* Desktop — wide panoramic image */}
       <div aria-hidden className="absolute inset-0 hidden md:block">
         <Image
           src="/hero-lion.png"
@@ -159,40 +177,49 @@ export default function HeroSection() {
         />
       </div>
 
-      {/* ── 모바일 전용 오버레이 — 짙은 어둠으로 가독성 확보 ── */}
+      {/* ── Layer 2: 3D Canvas ──────────────────────────── */}
+      {/* Mobile: full-screen / Desktop: right 58% of viewport */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-black/75 md:hidden"
-      />
-      {/* ── 모바일 전용 하단 그라데이션 — 텍스트 아래 공간 분리 ── */}
-      <div
-        aria-hidden
-        className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black to-transparent md:hidden"
-      />
+        className="absolute inset-0 md:left-[42%]"
+        style={{ pointerEvents: "none" }}
+      >
+        <div className="absolute inset-0" style={{ pointerEvents: "all" }}>
+          <HeroScene3D />
+        </div>
+      </div>
 
-      {/* ── 데스크톱 전용 오버레이 — 좌측 텍스트 가독성만, 우측 이미지 최대 노출 ── */}
+      {/* ── Layer 3: Readability overlays ──────────────── */}
+      {/* Mobile: top-heavy gradient so text is readable, centre opens for the logo */}
       <div
         aria-hidden
-        className="absolute inset-0 hidden bg-gradient-to-r from-black/70 via-black/10 to-transparent md:block"
+        className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/70 md:hidden"
       />
-      {/* 데스크톱 하단 페이드 — 다음 섹션과 자연스러운 연결 */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#0A0A0A] to-transparent md:hidden"
+      />
+      {/* Desktop: left gradient keeps text legible, right side stays open for the 3D logo */}
+      <div
+        aria-hidden
+        className="absolute inset-0 hidden bg-gradient-to-r from-black/80 via-black/20 to-transparent md:block"
+      />
       <div
         aria-hidden
         className="absolute inset-x-0 bottom-0 hidden h-32 bg-gradient-to-t from-[#0A0A0A] to-transparent md:block"
       />
 
-      {/* ── 인디고 글로우 (데스크톱 좌측만) ── */}
+      {/* ── Indigo glow accent (desktop left) ──────────── */}
       <div
         aria-hidden
         className="pointer-events-none absolute left-[-120px] top-1/2 hidden h-[600px] w-[600px] -translate-y-1/2 rounded-full bg-[#6366F1]/15 blur-[160px] md:block"
       />
 
-      {/* ── 콘텐츠 ── */}
+      {/* ── Layer 4: Text content ────────────────────────── */}
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-24 pt-16 md:px-16 md:py-20">
-        {/* 모바일: 완전 중앙 정렬 / 데스크톱: 좌측 정렬, 텍스트 폭 제한 */}
         <div className="flex flex-col items-center gap-3 text-center md:max-w-xl md:items-start md:gap-5 md:text-left">
 
-          {/* 뱃지 */}
+          {/* Badge */}
           <motion.div
             custom={0}
             initial="hidden"
@@ -207,7 +234,7 @@ export default function HeroSection() {
             경성대학교 멋쟁이사자처럼
           </motion.div>
 
-          {/* 타이핑 슬로건 */}
+          {/* Typing slogan */}
           <motion.div
             custom={0.1}
             initial="hidden"
@@ -217,7 +244,10 @@ export default function HeroSection() {
           >
             <h1
               className="text-5xl font-extrabold leading-tight tracking-tight text-white md:text-6xl lg:text-7xl"
-              style={{ textShadow: "0 2px 24px rgba(0,0,0,0.9), 0 1px 8px rgba(0,0,0,0.8)" }}
+              style={{
+                textShadow:
+                  "0 2px 24px rgba(0,0,0,0.9), 0 1px 8px rgba(0,0,0,0.8)",
+              }}
             >
               {displayed[0] !== undefined && (
                 <span>
@@ -242,7 +272,7 @@ export default function HeroSection() {
             </h1>
           </motion.div>
 
-          {/* 서브 카피 */}
+          {/* Sub-copy */}
           <motion.p
             custom={0.3}
             initial="hidden"
@@ -256,7 +286,7 @@ export default function HeroSection() {
             경성대 멋쟁이사자처럼과 함께 직접 만들고 증명하세요.
           </motion.p>
 
-          {/* 모집 정보 뱃지 */}
+          {/* Recruitment info badges */}
           <motion.div
             custom={0.38}
             initial="hidden"
@@ -272,7 +302,7 @@ export default function HeroSection() {
             </span>
           </motion.div>
 
-          {/* 카운트다운 */}
+          {/* Countdown */}
           <motion.div
             custom={0.42}
             initial="hidden"
@@ -282,7 +312,7 @@ export default function HeroSection() {
             <HeroCountdown />
           </motion.div>
 
-          {/* CTA 버튼 */}
+          {/* CTA buttons */}
           <motion.div
             custom={0.45}
             initial="hidden"
@@ -306,7 +336,7 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* 스크롤 인디케이터 — 하단 고정, 배경 페이드로 가독성 확보 */}
+      {/* ── Scroll indicator ────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -329,7 +359,9 @@ export default function HeroSection() {
   );
 }
 
-/* ── 커서 ───────────────────────────────────────────────── */
+// ─────────────────────────────────────────────────────────
+// Cursor component
+// ─────────────────────────────────────────────────────────
 function Cursor({ blink = false }: { blink?: boolean }) {
   return (
     <span
