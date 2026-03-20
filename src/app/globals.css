@@ -20,6 +20,8 @@ html {
   font-size: 16px;
   background-color: #050505 !important;   /* 모바일 바운스 시 흰색 노출 방지 */
   overscroll-behavior: none;              /* 바운스 스크롤 차단 */
+  height: 100%;
+  overflow: hidden;                       /* html 자체 스크롤 제거 → body가 담당 */
 }
 
 body {
@@ -31,6 +33,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior: none;              /* iOS/Android 바운스 차단 */
+  height: 100%;
+  overflow-y: auto;                       /* 스크롤은 body 내부에서만 동작 */
+  -webkit-overflow-scrolling: touch;      /* iOS 관성 스크롤 유지 */
 }
 
 /* 전역: 본문·설명글 최소 16px 강제 (데스크톱·모바일 공통) */
