@@ -63,7 +63,7 @@ function TypingIndicator() {
 }
 
 /* ── 챗봇 메시지 말풍선 ──────────────────────────────── */
-function Bubble({ msg }: { msg: Message }) {
+function Bubble({ msg, onClose }: { msg: Message; onClose?: () => void }) {
   const isUser = msg.from === "user";
   return (
     <motion.div
@@ -91,18 +91,30 @@ function Bubble({ msg }: { msg: Message }) {
         </div>
         {msg.buttons && msg.buttons.length > 0 && (
           <div className="flex flex-col gap-1.5 pl-0.5">
-            {msg.buttons.map((btn) => (
-              <a
-                key={btn.href}
-                href={btn.href}
-                {...(btn.external !== false
-                  ? { target: "_blank", rel: "noopener noreferrer" }
-                  : {})}
-                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#6366f1]/40 bg-[#6366f1]/10 px-3.5 py-2 text-xs font-semibold text-[#6366f1] transition-colors hover:bg-[#6366f1]/20"
-              >
-                {btn.label}
-              </a>
-            ))}
+            {msg.buttons.map((btn) =>
+              btn.external === false ? (
+                <button
+                  key={btn.href}
+                  onClick={() => {
+                    onClose?.();
+                    window.location.href = btn.href;
+                  }}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#6366f1]/40 bg-[#6366f1]/10 px-3.5 py-2 text-xs font-semibold text-[#6366f1] transition-colors hover:bg-[#6366f1]/20"
+                >
+                  {btn.label}
+                </button>
+              ) : (
+                <a
+                  key={btn.href}
+                  href={btn.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#6366f1]/40 bg-[#6366f1]/10 px-3.5 py-2 text-xs font-semibold text-[#6366f1] transition-colors hover:bg-[#6366f1]/20"
+                >
+                  {btn.label}
+                </a>
+              )
+            )}
           </div>
         )}
       </div>
@@ -192,7 +204,7 @@ function ChatWindow({ onClose }: { onClose: () => void }) {
 
       {/* 메시지 영역 */}
       <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4 scrollbar-hide">
-        {messages.map((m) => <Bubble key={m.id} msg={m} />)}
+        {messages.map((m) => <Bubble key={m.id} msg={m} onClose={onClose} />)}
         <AnimatePresence>
           {isTyping && <TypingIndicator />}
         </AnimatePresence>
