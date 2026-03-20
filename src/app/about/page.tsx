@@ -41,7 +41,7 @@ const VALUES = [
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-[#0A0A0A] px-6 py-28">
+    <main className="min-h-screen bg-[#0A0A0A] px-6 pb-28 pt-40">
       <div className="mx-auto max-w-5xl space-y-20">
 
         {/* ── 1. 메인 그리드: 텍스트 6 / 이미지 4 ──────── */}

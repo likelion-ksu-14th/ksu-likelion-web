@@ -329,7 +329,7 @@ export default function ProjectsPage() {
   );
 
   return (
-    <main className="min-h-screen bg-[#0A0A0A] px-6 py-24">
+    <main className="min-h-screen bg-[#0A0A0A] px-6 pb-24 pt-40">
       <div className="mx-auto max-w-6xl">
         {/* 헤딩 */}
         <motion.div

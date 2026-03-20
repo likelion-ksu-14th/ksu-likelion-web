@@ -188,7 +188,7 @@ export default function ApplyPage() {
         className="pointer-events-none absolute bottom-0 left-1/4 h-[400px] w-[400px] rounded-full bg-[#6366F1]/5 blur-[100px]"
       />
 
-      <div className="relative z-10 mx-auto max-w-4xl px-6 py-24">
+      <div className="relative z-10 mx-auto max-w-4xl px-6 pb-24 pt-40">
         {/* ── 헤더 ── */}
         <motion.div {...fadeUp(0)} className="mb-20 text-center">
           {/* Recruiting Now 뱃지 */}

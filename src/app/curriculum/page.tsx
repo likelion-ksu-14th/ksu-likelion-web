@@ -199,7 +199,7 @@ export default function CurriculumPage() {
   const SIDEBAR_H = 380;
 
   return (
-    <main className="min-h-screen bg-[#0A0A0A] px-6 py-24">
+    <main className="min-h-screen bg-[#0A0A0A] px-6 pb-24 pt-40">
 
       {/* 헤딩 */}
       <motion.div

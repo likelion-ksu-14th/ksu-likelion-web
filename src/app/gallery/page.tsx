@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function GalleryPage() {
   return (
-    <main className="min-h-screen bg-[#0A0A0A] py-28 pb-36">
+    <main className="min-h-screen bg-[#0A0A0A] pb-36 pt-40">
       {/* 배경 글로우 */}
       <div
         aria-hidden

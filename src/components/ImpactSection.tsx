@@ -97,7 +97,7 @@ interface StatCardProps {
 }
 
 function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps) {
-  const count = useCountUp(target, 1800, started);
+  const count = useCountUp(target, 4500, started);
 
   return (
     <motion.div
@@ -109,13 +109,13 @@ function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps)
     >
       {/* ── 숫자 — 화면 장악형 크기 + 3중 글로우 ── */}
       <p
-        className="tabular-nums text-8xl font-black leading-none tracking-tighter text-[#22C55E] lg:text-9xl"
+        className="tabular-nums text-8xl font-black leading-none tracking-tighter text-[#22C55E] md:text-9xl"
         style={{
           textShadow: [
-            "0 0  20px rgba(34,197,94,0.90)",   /* 1층: 가까운 코어 글로우 */
-            "0 0  60px rgba(34,197,94,0.55)",   /* 2층: 중간 확산 */
-            "0 0 120px rgba(34,197,94,0.25)",   /* 3층: 원거리 대기 */
-            "0  4px 16px rgba(0,0,0,0.95)",     /* 배경 대비 그림자 */
+            "0 0  24px rgba(34,197,94,0.95)",   /* 1층: 코어 */
+            "0 0  72px rgba(34,197,94,0.60)",   /* 2층: 확산 */
+            "0 0 160px rgba(34,197,94,0.28)",   /* 3층: 대기 */
+            "0  6px 20px rgba(0,0,0,0.98)",     /* 배경 대비 */
           ].join(", "),
         }}
       >
@@ -175,7 +175,7 @@ export default function ImpactSection() {
   const isInView = useInView(ref, { once: true, amount: 0.35 });
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-[#0A0A0A] px-6 py-36 md:py-40">
+    <section ref={ref} className="relative overflow-hidden bg-[#0A0A0A] px-6 py-40 md:py-48">
       {/* 매트릭스 배경 */}
       <MatrixCanvas />
 
