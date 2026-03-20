@@ -176,12 +176,7 @@ function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps)
       <p
         className="impact-number text-[#22C55E]"
         style={{
-          textShadow: [
-            "0 0  10px rgba(34,197,94,0.95)",
-            "0 0  40px rgba(34,197,94,0.65)",
-            "0 0 100px rgba(34,197,94,0.35)",
-            "0 10px 30px rgba(0,0,0,0.98)",
-          ].join(", "),
+          textShadow: "0 0 20px rgba(34,197,94,0.95), 0 0 90px rgba(34,197,94,0.65)",
         }}
       >
         {count}{suffix}
