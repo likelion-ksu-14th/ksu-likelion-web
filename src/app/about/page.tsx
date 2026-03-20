@@ -39,8 +39,53 @@ const VALUES = [
   },
 ];
 
+const BANNER_STYLES = `
+  .about-banner {
+    background: #050505 !important;
+    border-color: rgba(99,102,241,0.30) !important;
+  }
+  .about-banner-category {
+    font-size: clamp(0.9rem, 1vw, 1rem) !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.02em !important;
+    color: rgba(99,102,241,0.85) !important;
+  }
+  .about-banner-title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem) !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.05em !important;
+    color: #ffffff !important;
+    word-break: keep-all !important;
+    white-space: normal !important;
+  }
+  .about-banner-sub {
+    font-size: clamp(1.1rem, 1.5vw, 1.25rem) !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.02em !important;
+    color: rgba(255,255,255,0.75) !important;
+  }
+  .about-banner-btn {
+    font-size: clamp(1.2rem, 1.8vw, 1.4rem) !important;
+    font-weight: 700 !important;
+    padding: clamp(1rem, 1.5vw, 1.25rem) clamp(2.5rem, 4vw, 3.5rem) !important;
+    transition: transform 0.1s ease, background-color 0.2s ease, box-shadow 0.2s ease !important;
+    will-change: transform !important;
+  }
+  .about-banner-btn:active {
+    transform: scale(0.96) !important;
+  }
+  .about-banner-footer {
+    font-size: clamp(0.9rem, 1vw, 1rem) !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.02em !important;
+    color: rgba(255,255,255,0.35) !important;
+  }
+`;
+
 export default function AboutPage() {
   return (
+    <>
+      <style dangerouslySetInnerHTML={{ __html: BANNER_STYLES }} />
     <main className="min-h-screen bg-[#0A0A0A] px-6 pb-28 pt-40">
       <div className="mx-auto max-w-5xl space-y-20">
 
@@ -154,38 +199,41 @@ export default function AboutPage() {
           animate="visible"
           variants={fadeUp}
           custom={0.55}
-          className="relative overflow-hidden rounded-2xl border border-[#6366F1]/20 bg-[#6366F1]/[0.08] px-8 py-10 text-center"
+          className="about-banner relative overflow-hidden rounded-2xl border px-8 py-10 text-center"
         >
           {/* 배경 글로우 */}
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_100%,rgba(99,102,241,0.12),transparent_70%)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_100%,rgba(99,102,241,0.18),transparent_70%)]"
           />
 
-          <p className="relative text-sm font-medium uppercase tracking-widest text-[#6366F1]/60">
+          <p className="about-banner-category relative uppercase tracking-widest">
             선발 방식
           </p>
-          <p className="relative mt-3 text-2xl font-extrabold text-white md:text-3xl">
+          <p className="about-banner-title relative mt-3">
             면접 없이 오직{" "}
             <span className="text-[#6366F1]">진심</span>
             으로만 선발합니다
           </p>
-          <p className="relative mt-3 text-sm text-zinc-500">
+          <p className="about-banner-sub relative mt-3">
             서류 100% 선발 · 심리적 부담 없이 도전하세요
           </p>
 
           <div className="relative mt-6">
             <a
               href="/apply"
-              className="inline-block rounded-full bg-[#6366F1] px-7 py-3 text-sm font-bold text-white transition-all hover:bg-[#4f52d4] hover:shadow-lg hover:shadow-[#6366F1]/30"
+              className="about-banner-btn inline-block rounded-full bg-[#6366F1] text-white transition-all hover:bg-[#4f52d4] hover:shadow-lg hover:shadow-[#6366F1]/30"
             >
               지금 지원하기 →
             </a>
-            <p className="mt-3 text-xs text-zinc-600">서류 마감 3월 24일</p>
+            <p className="about-banner-footer mt-3">
+              서류 마감 3월 24일
+            </p>
           </div>
         </motion.div>
 
       </div>
     </main>
+    </>
   );
 }

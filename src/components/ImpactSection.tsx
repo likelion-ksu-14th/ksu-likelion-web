@@ -18,6 +18,8 @@ const RESPONSIVE_STYLES = `
     line-height: 1 !important;
     letter-spacing: -0.04em !important;
     white-space: nowrap !important;          /* PC: 숫자 한 줄 유지 */
+    will-change: contents !important;
+    transform: translateZ(0) !important;
   }
   .impact-label {
     font-size: clamp(1.25rem, 2.2vw, 1.75rem) !important;
@@ -138,6 +140,7 @@ function MatrixCanvas() {
     <canvas
       ref={canvasRef}
       className="pointer-events-none absolute inset-0 h-full w-full"
+      style={{ willChange: "transform", transform: "translateZ(0)" }}
     />
   );
 }
@@ -167,9 +170,10 @@ function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps)
         alignItems: "center",
         textAlign: "center",
         gap: "1.75rem",
-        /* 카드 내부가 화면 밖으로 나가지 않도록 안전망 */
         overflow: "hidden",
         width: "100%",
+        willChange: "transform, opacity",
+        transform: "translateZ(0)",
       }}
     >
       {/* 숫자 — !important 클래스로 PC/모바일 각각 제어 */}
@@ -177,9 +181,17 @@ function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps)
         className="impact-number text-[#22C55E]"
         style={{
           textShadow: "none",
+          willChange: "contents",
         }}
       >
-        {count}{suffix}
+        {count}
+        <span style={{
+          verticalAlign: "middle",
+          marginLeft: "2px",
+          opacity: 0.9,
+        }}>
+          {suffix}
+        </span>
       </p>
 
       {/* 장식용 구분선 */}
