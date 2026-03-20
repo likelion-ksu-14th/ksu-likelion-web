@@ -105,27 +105,25 @@ function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps)
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay }}
       className="flex flex-col items-center text-center"
-      style={{ gap: "2rem !important" }} // 카드 내부 요소 간격 조정
+      style={{ gap: "2rem !important" }} 
     >
-      {/* ── 숫자: 가독성을 위해 최대 크기를 8.5rem으로 소폭 하향 조정 ── */}
+      {/* ── 숫자: PC 웅장함 복구 (clamp 최솟값 상향) ── */}
       <p
         className="tabular-nums font-black leading-none tracking-tighter text-[#22C55E]"
         style={{
-          fontSize: "clamp(5rem, 8vw, 7.5rem) !important",
-          wordBreak: "keep-all",
-          overflowWrap: "break-word",
+          fontSize: "clamp(5.5rem, 10vw, 7.5rem) !important",
+          whiteSpace: "nowrap", // 숫자와 기호가 절대 안 잘리게 함
           textShadow: [
-            "0 0  24px rgba(34,197,94,0.95)",   /* 코어 글로우 소폭 축소 */
-            "0 0  70px rgba(34,197,94,0.65)",   /* 중간 확산 */
-            "0 0 150px rgba(34,197,94,0.35)",   /* 대기 광무 최적화 */
-            "0  10px 30px rgba(0,0,0,0.98)",    /* 가독성 보정 */
+            "0 0  24px rgba(34,197,94,0.95)",
+            "0 0  70px rgba(34,197,94,0.65)",
+            "0 0 150px rgba(34,197,94,0.35)",
+            "0  10px 30px rgba(0,0,0,0.98)",
           ].join(", "),
         }}
       >
         {count}{suffix}
       </p>
 
-      {/* ── 장식용 구분선 ── */}
       <div
         className="h-[2px] w-16 rounded-full"
         style={{
@@ -135,23 +133,27 @@ function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps)
         }}
       />
 
-      {/* ── 타이틀: 텍스트 크기 미세 조정 ── */}
+      {/* ── 타이틀: 팀 비율 사수 (whiteSpace: nowrap 추가) ── */}
       <p
         className="font-bold text-white"
         style={{
-            fontSize: "clamp(1.25rem, 2.2vw, 1.75rem) !important",
+            fontSize: "clamp(1.5rem, 2.5vw, 1.75rem) !important",
             textShadow: "0 0 24px rgba(0,0,0,1), 0 2px 8px rgba(0,0,0,0.9)",
+            whiteSpace: "nowrap", // "실행 팀 비율"이 한 줄에 다 나오게 강제
             wordBreak: "keep-all",
-            overflowWrap: "break-word",
         }}
       >
         {label}
       </p>
 
-      {/* ── 설명 문구: 가독성 중심의 크기 ── */}
+      {/* ── 설명 문구: 자연스러운 단어 단위 줄바꿈 ── */}
       <p 
-        className="max-w-[260px] leading-relaxed tracking-wide text-zinc-400"
-        style={{ fontSize: "clamp(0.9rem, 1.2vw, 1rem) !important", wordBreak: "keep-all", overflowWrap: "break-word" }}
+        className="max-w-[280px] leading-relaxed tracking-wide text-zinc-400"
+        style={{ 
+          fontSize: "clamp(1rem, 1.2vw, 1.1rem) !important", 
+          wordBreak: "keep-all", 
+          overflowWrap: "break-word" 
+        }}
       >
         {sub}
       </p>
@@ -209,15 +211,17 @@ export default function ImpactSection() {
           </div>
           <h2 
             className="font-extrabold text-white"
-            style={{ fontSize: "clamp(2rem, 5vw, 4rem) !important", wordBreak: "keep-all", overflowWrap: "break-word" }}
+            style={{ 
+              fontSize: "clamp(2.2rem, 5vw, 4rem) !important", 
+              wordBreak: "keep-all",
+              whiteSpace: "nowrap" // "숫자로 보는 14기의 목표" 사수
+            }}
           >
-            숫자로 보는{" "}
-            <span className="text-[#22C55E]">14기의 목표</span>
+            숫자로 보는 <span className="text-[#22C55E]">14기의 목표</span>
           </h2>
         </motion.div>
 
-        {/* 그리드 레이아웃: 여백을 더 확보하여 겹침 방지 */}
-        <div className="grid grid-cols-1 gap-20 md:grid-cols-3 md:gap-8 lg:gap-16">
+        <div className="grid grid-cols-1 gap-24 md:grid-cols-3 md:gap-8 lg:gap-16">
           {stats.map((s, i) => (
             <StatCard
               key={s.label}
