@@ -3,6 +3,69 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 
+/* ─────────────────────────────────────────────────────────────
+   근본 원인 해결 전략:
+   ① clamp 최솟값을 없애고 vw 단위만 사용 → 화면 너비에 100% 비례
+   ② @media 미디어 쿼리로 모바일 전용 크기 강제 (!important)
+   ③ whiteSpace: nowrap 완전 제거 → overflow 원천 차단
+   ④ 부모 컨테이너에 overflow-x: hidden으로 안전망 추가
+──────────────────────────────────────────────────────────── */
+const RESPONSIVE_STYLES = `
+  /* ── PC 기본값 ── */
+  .impact-number {
+    font-size: clamp(4rem, 10vw, 7.5rem) !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    letter-spacing: -0.04em !important;
+    white-space: nowrap !important;          /* PC: 숫자 한 줄 유지 */
+  }
+  .impact-label {
+    font-size: clamp(1.25rem, 2.2vw, 1.75rem) !important;
+    white-space: nowrap !important;          /* PC: 라벨 한 줄 유지 */
+    word-break: keep-all !important;
+  }
+  .impact-sub {
+    font-size: clamp(1rem, 1.2vw, 1.1rem) !important;
+    word-break: keep-all !important;
+    overflow-wrap: break-word !important;
+  }
+  .impact-heading {
+    font-size: clamp(2rem, 5vw, 4rem) !important;
+    word-break: keep-all !important;
+    white-space: normal !important;          /* 헤딩은 항상 줄바꿈 허용 */
+  }
+
+  /* ── 모바일 (640px 이하) — 강제 override ── */
+  @media (max-width: 640px) {
+    .impact-number {
+      font-size: 3.75rem !important;         /* 60px — 1000+도 안전하게 수용 */
+      white-space: nowrap !important;
+      letter-spacing: -0.03em !important;
+    }
+    .impact-label {
+      font-size: 1.25rem !important;         /* 20px */
+      white-space: normal !important;        /* 모바일: 자연스러운 줄바꿈 허용 */
+    }
+    .impact-sub {
+      font-size: 1rem !important;            /* 16px — 최소 보장 */
+    }
+    .impact-heading {
+      font-size: 1.75rem !important;         /* 28px */
+      white-space: normal !important;
+    }
+  }
+
+  /* ── 극소형 (380px 이하) ── */
+  @media (max-width: 380px) {
+    .impact-number {
+      font-size: 3.25rem !important;         /* 52px */
+    }
+    .impact-heading {
+      font-size: 1.5rem !important;          /* 24px */
+    }
+  }
+`;
+
 /* ── 카운트업 훅 ───────────────────────────────────────── */
 function useCountUp(target: number, durationMs: number, started: boolean) {
   const [count, setCount] = useState(0);
@@ -48,7 +111,6 @@ function MatrixCanvas() {
     const draw = () => {
       ctx.fillStyle = "rgba(10,10,10,0.06)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
       ctx.font = `${FONT_SIZE}px monospace`;
 
       drops.forEach((y, i) => {
@@ -56,7 +118,6 @@ function MatrixCanvas() {
         const alpha = Math.random() > 0.92 ? 0.55 : 0.12;
         ctx.fillStyle = `rgba(34,197,94,${alpha})`;
         ctx.fillText(char, i * FONT_SIZE, y * FONT_SIZE);
-
         if (y * FONT_SIZE > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       });
@@ -70,11 +131,7 @@ function MatrixCanvas() {
       drops = Array<number>(columns).fill(1);
     };
     window.addEventListener("resize", onResize);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener("resize", onResize);
-    };
+    return () => { clearInterval(interval); window.removeEventListener("resize", onResize); };
   }, []);
 
   return (
@@ -104,55 +161,62 @@ function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps)
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay }}
-      className="flex flex-col items-center text-center"
-      style={{ gap: "2rem !important" }} 
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        gap: "1.75rem",
+        /* 카드 내부가 화면 밖으로 나가지 않도록 안전망 */
+        overflow: "hidden",
+        width: "100%",
+      }}
     >
-      {/* ── 숫자: PC 웅장함 복구 (clamp 최솟값 상향) ── */}
+      {/* 숫자 — !important 클래스로 PC/모바일 각각 제어 */}
       <p
-        className="tabular-nums font-black leading-none tracking-tighter text-[#22C55E]"
+        className="impact-number text-[#22C55E]"
         style={{
-          fontSize: "clamp(5.5rem, 10vw, 7.5rem) !important",
-          whiteSpace: "nowrap", // 숫자와 기호가 절대 안 잘리게 함
           textShadow: [
             "0 0  24px rgba(34,197,94,0.95)",
             "0 0  70px rgba(34,197,94,0.65)",
             "0 0 150px rgba(34,197,94,0.35)",
-            "0  10px 30px rgba(0,0,0,0.98)",
+            "0  8px 24px rgba(0,0,0,0.98)",
           ].join(", "),
         }}
       >
         {count}{suffix}
       </p>
 
+      {/* 장식용 구분선 */}
       <div
-        className="h-[2px] w-16 rounded-full"
         style={{
-          background:
-            "linear-gradient(to right, transparent, rgba(34,197,94,0.70), transparent)",
+          height: "2px",
+          width: "64px",
+          flexShrink: 0,
+          borderRadius: "9999px",
+          background: "linear-gradient(to right, transparent, rgba(34,197,94,0.70), transparent)",
           boxShadow: "0 0 10px rgba(34,197,94,0.50)",
         }}
       />
 
-      {/* ── 타이틀: 팀 비율 사수 (whiteSpace: nowrap 추가) ── */}
+      {/* 타이틀 */}
       <p
-        className="font-bold text-white"
+        className="impact-label text-white"
         style={{
-            fontSize: "clamp(1.5rem, 2.5vw, 1.75rem) !important",
-            textShadow: "0 0 24px rgba(0,0,0,1), 0 2px 8px rgba(0,0,0,0.9)",
-            whiteSpace: "nowrap", // "실행 팀 비율"이 한 줄에 다 나오게 강제
-            wordBreak: "keep-all",
+          fontWeight: 700,
+          textShadow: "0 0 24px rgba(0,0,0,1), 0 2px 8px rgba(0,0,0,0.9)",
         }}
       >
         {label}
       </p>
 
-      {/* ── 설명 문구: 자연스러운 단어 단위 줄바꿈 ── */}
-      <p 
-        className="max-w-[280px] leading-relaxed tracking-wide text-zinc-400"
-        style={{ 
-          fontSize: "clamp(1rem, 1.2vw, 1.1rem) !important", 
-          wordBreak: "keep-all", 
-          overflowWrap: "break-word" 
+      {/* 설명 문구 */}
+      <p
+        className="impact-sub text-zinc-400"
+        style={{
+          maxWidth: "260px",
+          lineHeight: 1.75,
+          letterSpacing: "0.03em",
         }}
       >
         {sub}
@@ -188,50 +252,100 @@ export default function ImpactSection() {
   const isInView = useInView(ref, { once: true, amount: 0.35 });
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-[#0A0A0A] px-6 py-32 md:py-48">
-      <MatrixCanvas />
+    <>
+      {/* 반응형 !important 스타일 주입 */}
+      <style dangerouslySetInnerHTML={{ __html: RESPONSIVE_STYLES }} />
 
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_50%,transparent_40%,#0A0A0A_100%)]" />
+      <section
+        ref={ref}
+        className="relative bg-[#0A0A0A]"
+        style={{
+          overflow: "hidden",        /* 가로 오버플로우 완전 차단 */
+          padding: "8rem 1.5rem",
+        }}
+      >
+        <MatrixCanvas />
 
-      <div className="relative z-10 mx-auto max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="mb-20 text-center"
+        {/* 중앙 그라디언트 마스크 */}
+        <div
+          aria-hidden
+          style={{
+            pointerEvents: "none",
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(ellipse 60% 60% at 50% 50%, transparent 40%, #0A0A0A 100%)",
+          }}
+        />
+
+        <div
+          style={{
+            position: "relative",
+            zIndex: 10,
+            margin: "0 auto",
+            maxWidth: "80rem",
+            /* 컨테이너도 가로 넘침 차단 */
+            overflow: "hidden",
+          }}
         >
-          <div className="mb-4 flex items-center justify-center gap-3">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#22C55E]">
-              Impact
-            </p>
-            <span className="rounded-full border border-[#22C55E]/40 bg-[#22C55E]/10 px-3 py-0.5 text-[10px] font-bold tracking-widest text-[#22C55E]">
-              14th Vision
-            </span>
-          </div>
-          <h2 
-            className="font-extrabold text-white"
-            style={{ 
-              fontSize: "clamp(2.2rem, 5vw, 4rem) !important", 
-              wordBreak: "keep-all",
-              whiteSpace: "nowrap" // "숫자로 보는 14기의 목표" 사수
-            }}
+          {/* ── 헤딩 ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            style={{ marginBottom: "5rem", textAlign: "center" }}
           >
-            숫자로 보는 <span className="text-[#22C55E]">14기의 목표</span>
-          </h2>
-        </motion.div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+              <p style={{ fontSize: "0.875rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", color: "#22C55E" }}>
+                Impact
+              </p>
+              <span style={{
+                borderRadius: "9999px",
+                border: "1px solid rgba(34,197,94,0.40)",
+                background: "rgba(34,197,94,0.10)",
+                padding: "0.125rem 0.75rem",
+                fontSize: "0.75rem",
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                color: "#22C55E",
+              }}>
+                14th Vision
+              </span>
+            </div>
 
-        <div className="grid grid-cols-1 gap-24 md:grid-cols-3 md:gap-8 lg:gap-16">
-          {stats.map((s, i) => (
-            <StatCard
-              key={s.label}
-              {...s}
-              started={isInView}
-              delay={i * 0.15}
-            />
-          ))}
+            {/* h2 — whiteSpace: nowrap 완전 제거, 미디어 쿼리로 크기 제어 */}
+            <h2 className="impact-heading font-extrabold text-white">
+              숫자로 보는{" "}
+              <span style={{ color: "#22C55E" }}>14기의 목표</span>
+            </h2>
+          </motion.div>
+
+          {/* 구분선 */}
+          <div style={{
+            marginBottom: "5rem",
+            height: "1px",
+            background: "linear-gradient(to right, transparent, rgba(255,255,255,0.10), transparent)",
+          }} />
+
+          {/* 통계 그리드 */}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
+            gap: "4rem 3rem",
+            alignItems: "start",
+          }}>
+            {stats.map((s, i) => (
+              <StatCard
+                key={s.label}
+                {...s}
+                started={isInView}
+                delay={i * 0.15}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
