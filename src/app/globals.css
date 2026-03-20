@@ -16,12 +16,26 @@
   --foreground: #F4F4F5;
 }
 
+html {
+  /* 최소 폰트 기준: 16px (브라우저 기본값 유지) */
+  font-size: 16px;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: "Pretendard", sans-serif;
+  font-size: 1rem; /* = 16px */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* 모바일: 본문·설명글 최소 16px 강제 */
+@media (max-width: 640px) {
+  p, li, label, .mobile-readable {
+    font-size: max(1rem, 1em);
+    line-height: 1.7;
+  }
 }
 
 @keyframes blink {

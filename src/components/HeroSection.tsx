@@ -27,46 +27,51 @@ function useCountdown() {
   return time;
 }
 
-function CountdownUnit({ value, label }: { value: number; label: string }) {
-  return (
-    <div className="flex flex-col items-center gap-0.5">
-      <span className="tabular-nums text-xl font-extrabold leading-none tracking-tight text-white md:text-2xl">
-        {String(value).padStart(2, "0")}
-      </span>
-      <span className="text-[9px] font-semibold uppercase tracking-widest text-zinc-500">
-        {label}
-      </span>
-    </div>
-  );
-}
-
 function HeroCountdown() {
   const { days, hours, minutes, seconds, ended } = useCountdown();
 
   if (ended) {
     return (
-      <span className="rounded-full border border-zinc-700 bg-black/40 px-3 py-1.5 text-xs font-semibold text-zinc-500 backdrop-blur-sm">
+      <div className="inline-flex items-center gap-2 rounded-2xl border border-zinc-700 bg-black/50 px-5 py-3 text-base font-semibold text-zinc-400 backdrop-blur-md">
         모집이 마감되었습니다
-      </span>
+      </div>
     );
   }
 
-  const Sep = () => (
-    <span className="mb-3 text-base font-bold text-zinc-600">:</span>
-  );
+  const units = [
+    { value: days,    labelKo: "일",   labelEn: "DAYS"  },
+    { value: hours,   labelKo: "시간", labelEn: "HOURS" },
+    { value: minutes, labelKo: "분",   labelEn: "MINS"  },
+    { value: seconds, labelKo: "초",   labelEn: "SECS"  },
+  ];
 
   return (
-    <div className="inline-flex items-end gap-2 rounded-2xl border border-[#6366F1]/25 bg-black/50 px-5 py-3 backdrop-blur-md">
-      {/* 긴박감 점 */}
-      <span className="mb-4 h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-red-500" />
-      <CountdownUnit value={days}    label="일" />
-      <Sep />
-      <CountdownUnit value={hours}   label="시간" />
-      <Sep />
-      <CountdownUnit value={minutes} label="분" />
-      <Sep />
-      <CountdownUnit value={seconds} label="초" />
-      <span className="mb-1 ml-1 text-[10px] font-semibold text-zinc-500">남음</span>
+    <div className="flex items-stretch gap-1.5 sm:gap-2">
+      {units.map(({ value, labelKo, labelEn }, i) => (
+        <div key={labelEn} className="flex items-center gap-1.5 sm:gap-2">
+          {/* 숫자 박스 */}
+          <div className="flex min-w-[56px] flex-col items-center gap-1 rounded-xl border border-[#6366F1]/25 bg-black/60 px-3 py-2.5 backdrop-blur-md sm:min-w-[64px] sm:px-4 sm:py-3">
+            <span className="tabular-nums text-2xl font-extrabold leading-none tracking-tight text-white sm:text-3xl">
+              {String(value).padStart(2, "0")}
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 sm:text-[11px]">
+              {labelEn}
+            </span>
+            <span className="text-[10px] font-medium text-zinc-600 sm:text-[11px]">
+              {labelKo}
+            </span>
+          </div>
+          {/* 구분자 (마지막 제외) */}
+          {i < units.length - 1 && (
+            <span className="mb-6 text-lg font-bold text-zinc-600 sm:text-xl">:</span>
+          )}
+        </div>
+      ))}
+      {/* 긴박감 표시 */}
+      <div className="ml-1 flex flex-col items-center justify-center gap-1 self-center">
+        <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
+        <span className="text-[9px] font-bold uppercase tracking-widest text-red-500/70">live</span>
+      </div>
     </div>
   );
 }

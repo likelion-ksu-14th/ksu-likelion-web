@@ -92,17 +92,17 @@ const NOTICES = [
   },
 ];
 
-function AccordionItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
+/* isOpen/onToggle을 받아 Single-open 지원 */
+function AccordionItem({ q, a, isOpen, onToggle }: { q: string; a: string; isOpen: boolean; onToggle: () => void }) {
   return (
     <div className="border-b border-white/10 last:border-none">
       <button
-        onClick={() => setOpen((v) => !v)}
+        onClick={onToggle}
         className="flex w-full items-center justify-between py-5 text-left"
       >
-        <span className="text-sm font-semibold text-white">{q}</span>
+        <span className="text-base font-semibold text-white">{q}</span>
         <motion.span
-          animate={{ rotate: open ? 45 : 0 }}
+          animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ duration: 0.25 }}
           className="ml-4 flex-shrink-0 text-xl font-light text-[#6366F1]"
         >
@@ -110,7 +110,7 @@ function AccordionItem({ q, a }: { q: string; a: string }) {
         </motion.span>
       </button>
       <AnimatePresence initial={false}>
-        {open && (
+        {isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -118,7 +118,7 @@ function AccordionItem({ q, a }: { q: string; a: string }) {
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <p className="pb-5 text-sm leading-relaxed text-zinc-400">{a}</p>
+            <p className="pb-5 text-base leading-relaxed text-zinc-400">{a}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -126,32 +126,29 @@ function AccordionItem({ q, a }: { q: string; a: string }) {
   );
 }
 
-/* ── FaqItem (모집 FAQ 전용, 카드 스타일) ─────────────── */
-function FaqItem({ q, a, icon, delay }: { q: string; a: string; icon: string; delay?: number }) {
-  const [open, setOpen] = useState(false);
+/* ── FaqItem — Single-open 지원 (isOpen/onToggle props) ── */
+function FaqItem({ q, a, icon, isOpen, onToggle }: {
+  q: string; a: string; icon: string; isOpen: boolean; onToggle: () => void;
+}) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: "easeOut", delay: delay ?? 0 }}
+    <div
       className={[
         "overflow-hidden rounded-2xl border transition-colors duration-200",
-        open
+        isOpen
           ? "border-[#6366F1]/40 bg-[#6366F1]/5"
           : "border-white/10 bg-white/[0.03] hover:border-white/20",
       ].join(" ")}
     >
       <button
-        onClick={() => setOpen((v) => !v)}
+        onClick={onToggle}
         className="flex w-full items-center gap-4 px-6 py-5 text-left"
       >
-        {/* 아이콘 */}
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-lg">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-xl">
           {icon}
         </span>
-        <span className="flex-1 text-sm font-semibold text-white">{q}</span>
+        <span className="flex-1 text-base font-semibold text-white">{q}</span>
         <motion.span
-          animate={{ rotate: open ? 45 : 0 }}
+          animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ duration: 0.22 }}
           className="shrink-0 text-xl font-light text-[#6366F1]"
         >
@@ -159,7 +156,7 @@ function FaqItem({ q, a, icon, delay }: { q: string; a: string; icon: string; de
         </motion.span>
       </button>
       <AnimatePresence initial={false}>
-        {open && (
+        {isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -167,13 +164,13 @@ function FaqItem({ q, a, icon, delay }: { q: string; a: string; icon: string; de
             transition={{ duration: 0.28, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <p className="border-t border-white/5 px-6 pb-6 pt-4 text-sm leading-relaxed text-zinc-400">
+            <p className="border-t border-white/5 px-6 pb-6 pt-4 text-base leading-relaxed text-zinc-400">
               {a}
             </p>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
 
@@ -201,6 +198,30 @@ const RECRUIT_FAQ = [
   },
 ];
 
+/* ── 유의사항 FAQ ─────────────────────────────────────── */
+const CAUTION_FAQ = [
+  {
+    q: "중복 지원이 가능한가요?",
+    a: "동일 기수에 중복 지원은 불가합니다. 1인 1회 지원이 원칙이며, 중복 접수 시 모든 지원이 무효 처리될 수 있습니다.",
+    icon: "⚠️",
+  },
+  {
+    q: "허위 기재 시 어떻게 되나요?",
+    a: "지원서에 허위 사실을 기재한 경우, 합격 이후라도 합격이 취소될 수 있습니다. 성실하고 정직한 지원을 부탁드립니다.",
+    icon: "❌",
+  },
+  {
+    q: "활동에 반드시 참여해야 하나요?",
+    a: "네, 모든 부원은 정기 세션 및 활동에 성실한 참여가 필수입니다. 무단 결석이 3회 이상 누적될 경우 수료가 어려울 수 있습니다.",
+    icon: "📌",
+  },
+  {
+    q: "회비는 얼마인가요?",
+    a: "소정의 연회비가 있으며, 최종 합격 후 입부 오리엔테이션에서 별도 안내드립니다. 회비는 활동 지원 및 행사 운영에 사용됩니다.",
+    icon: "💰",
+  },
+];
+
 /* ── 페이지 ────────────────────────────────────────────── */
 const fadeUp = (
   delay = 0,
@@ -211,6 +232,10 @@ const fadeUp = (
 });
 
 export default function ApplyPage() {
+  const [openNoticeId, setOpenNoticeId] = useState<string | null>(null);
+  const [openFaqId,    setOpenFaqId]    = useState<string | null>(null);
+  const [openCautionId, setOpenCautionId] = useState<string | null>(null);
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#0A0A0A]">
       {/* ── 배경 글로우 ── */}
@@ -334,7 +359,13 @@ export default function ApplyPage() {
           </h2>
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-6">
             {NOTICES.map((n) => (
-              <AccordionItem key={n.q} q={n.q} a={n.a} />
+              <AccordionItem
+                key={n.q}
+                q={n.q}
+                a={n.a}
+                isOpen={openNoticeId === n.q}
+                onToggle={() => setOpenNoticeId(openNoticeId === n.q ? null : n.q)}
+              />
             ))}
           </div>
         </motion.div>
@@ -353,10 +384,43 @@ export default function ApplyPage() {
             <span className="text-[#6366F1]">자주 묻는 질문</span>
           </h2>
 
-          {/* 아코디언 카드들 */}
+          {/* 14기 모집 FAQ 아코디언 */}
           <div className="space-y-3">
-            {RECRUIT_FAQ.map(({ q, a, icon }, idx) => (
-              <FaqItem key={idx} q={q} a={a} icon={icon} delay={idx * 0.06} />
+            {RECRUIT_FAQ.map(({ q, a, icon }) => (
+              <FaqItem
+                key={q}
+                q={q}
+                a={a}
+                icon={icon}
+                isOpen={openFaqId === q}
+                onToggle={() => setOpenFaqId(openFaqId === q ? null : q)}
+              />
+            ))}
+          </div>
+        </motion.div>
+
+        {/* ── 유의사항 FAQ ── */}
+        <motion.div {...fadeUp(0.44)} className="mb-24">
+          <div className="mb-8 flex items-center gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-base font-medium text-amber-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+              유의사항
+            </span>
+          </div>
+          <h2 className="mb-8 text-2xl font-extrabold text-white">
+            지원 전 꼭 확인하세요{" "}
+            <span className="text-amber-400">유의사항 FAQ</span>
+          </h2>
+          <div className="space-y-3">
+            {CAUTION_FAQ.map(({ q, a, icon }) => (
+              <FaqItem
+                key={q}
+                q={q}
+                a={a}
+                icon={icon}
+                isOpen={openCautionId === q}
+                onToggle={() => setOpenCautionId(openCautionId === q ? null : q)}
+              />
             ))}
           </div>
         </motion.div>
