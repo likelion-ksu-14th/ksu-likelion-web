@@ -65,13 +65,13 @@ export default function HeroSection() {
 
   return (
     <section className="relative flex min-h-[90vh] max-h-[960px] items-center overflow-hidden md:min-h-[800px]">
-      {/* ── 배경 이미지: 모바일 — center, contain ── */}
+      {/* ── 배경 이미지: 모바일 — 크리스털, contain ── */}
       <div
         aria-hidden
         className="absolute inset-0 md:hidden"
         style={{
-          backgroundImage: "url('/hero-lion.png')",
-          backgroundSize: "65%",
+          backgroundImage: "url('https://i.ibb.co/CKy8wgHv/Chat-GPT-Image-2026-3-20-06-42-45.png')",
+          backgroundSize: "contain",
           backgroundPosition: "center center",
           backgroundRepeat: "no-repeat",
         }}

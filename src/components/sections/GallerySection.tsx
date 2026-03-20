@@ -4,31 +4,47 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
-/* ── 갤러리 데이터 — 사진 교체 시 이 배열만 수정하세요 ── */
+/* ── 카테고리 타입 ────────────────────────────────── */
+type Category = "전체" | "세션" | "해커톤" | "네트워킹";
+const CATEGORIES: Category[] = ["전체", "세션", "해커톤", "네트워킹"];
+
+/* ── 갤러리 데이터 — src에 URL만 채워 넣으면 자동 반영됩니다 ── */
 export interface GalleryItem {
   id: number;
   src: string;
   alt: string;
-  span?: "col" | "row" | "both"; // 데스크탑에서 큰 타일로 강조할 경우 사용
+  category: Exclude<Category, "전체">;
 }
 
 export const galleryData: GalleryItem[] = [
-  { id: 1,  src: "", alt: "해커톤 현장" },
-  { id: 2,  src: "", alt: "네트워킹 파티" },
-  { id: 3,  src: "", alt: "프로젝트 발표" },
-  { id: 4,  src: "", alt: "스터디 세션" },
-  { id: 5,  src: "", alt: "OT 행사" },
-  { id: 6,  src: "", alt: "팀 빌딩" },
-  { id: 7,  src: "", alt: "코딩 세션" },
-  { id: 8,  src: "", alt: "수료식" },
+  { id: 1,  src: "", alt: "해커톤 현장",    category: "해커톤"   },
+  { id: 2,  src: "", alt: "네트워킹 파티",  category: "네트워킹" },
+  { id: 3,  src: "", alt: "프로젝트 발표",  category: "세션"     },
+  { id: 4,  src: "", alt: "스터디 세션",    category: "세션"     },
+  { id: 5,  src: "", alt: "OT 행사",        category: "네트워킹" },
+  { id: 6,  src: "", alt: "팀 빌딩",        category: "네트워킹" },
+  { id: 7,  src: "", alt: "코딩 세션",      category: "세션"     },
+  { id: 8,  src: "", alt: "수료식",         category: "네트워킹" },
 ];
 
-/* ── 이미지 플레이스홀더 ──────────────────────────── */
-function PhotoPlaceholder({ alt }: { alt: string }) {
+/* ── 카테고리별 이모지 (플레이스홀더용) ─────────── */
+const CATEGORY_EMOJI: Record<string, string> = {
+  "해커톤 현장":   "💻",
+  "네트워킹 파티": "🥂",
+  "프로젝트 발표": "🎤",
+  "스터디 세션":   "📚",
+  "OT 행사":       "🦁",
+  "팀 빌딩":       "🤝",
+  "코딩 세션":     "⌨️",
+  "수료식":        "🎓",
+};
+
+/* ── 플레이스홀더 ─────────────────────────────────── */
+function Placeholder({ alt }: { alt: string }) {
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-[#1a1a2e]">
-      <span className="text-3xl opacity-30">📷</span>
-      <span className="px-2 text-center text-[11px] text-zinc-600">{alt}</span>
+    <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-[#13131f] to-[#1a1a2e]">
+      <span className="text-3xl">{CATEGORY_EMOJI[alt] ?? "📷"}</span>
+      <span className="px-3 text-center text-[11px] font-medium text-zinc-600">{alt}</span>
     </div>
   );
 }
@@ -46,27 +62,19 @@ function Lightbox({
   const [current, setCurrent] = useState(index);
   const item = items[current];
 
-  const prev = useCallback(
-    () => setCurrent((c) => (c - 1 + items.length) % items.length),
-    [items.length]
-  );
-  const next = useCallback(
-    () => setCurrent((c) => (c + 1) % items.length),
-    [items.length]
-  );
+  const prev = useCallback(() => setCurrent((c) => (c - 1 + items.length) % items.length), [items.length]);
+  const next = useCallback(() => setCurrent((c) => (c + 1) % items.length), [items.length]);
 
-  /* 키보드 네비게이션 */
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
+    const h = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowLeft") prev();
       if (e.key === "ArrowRight") next();
     };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
   }, [onClose, prev, next]);
 
-  /* 스크롤 잠금 */
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
@@ -75,26 +83,20 @@ function Lightbox({
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
     >
-      {/* 배경 */}
       <motion.div
-        className="absolute inset-0 bg-black/90 backdrop-blur-md"
+        className="absolute inset-0 bg-black/92 backdrop-blur-md"
         onClick={onClose}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       />
 
-      {/* 이미지 패널 */}
       <div className="relative z-10 flex w-full max-w-4xl flex-col items-center gap-4">
         <AnimatePresence mode="wait">
           <motion.div
             key={current}
-            className="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111] shadow-[0_0_60px_rgba(0,0,0,0.8)]"
+            className="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111]"
             style={{ aspectRatio: "16/10" }}
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -103,59 +105,36 @@ function Lightbox({
           >
             {item.src ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={item.src}
-                alt={item.alt}
-                className="h-full w-full object-cover"
-              />
+              <img src={item.src} alt={item.alt} className="h-full w-full object-cover" />
             ) : (
-              <PhotoPlaceholder alt={item.alt} />
+              <Placeholder alt={item.alt} />
             )}
-            {/* 하단 캡션 */}
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-6 pb-5 pt-10">
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-6 pb-5 pt-12">
               <p className="text-sm font-semibold text-white">{item.alt}</p>
               <p className="text-xs text-zinc-500">{current + 1} / {items.length}</p>
             </div>
           </motion.div>
         </AnimatePresence>
 
-        {/* 네비게이션 버튼 */}
         <div className="flex items-center gap-3">
-          <button
-            onClick={prev}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-400 transition-colors hover:bg-white/15 hover:text-white"
-            aria-label="이전 사진"
-          >
+          <button onClick={prev} className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-400 transition-colors hover:bg-white/15 hover:text-white" aria-label="이전">
             <ChevronLeft className="h-5 w-5" />
           </button>
-          {/* 썸네일 인디케이터 */}
           <div className="flex gap-1.5">
             {items.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrent(i)}
-                className={`h-1.5 rounded-full transition-all duration-200 ${
-                  i === current
-                    ? "w-6 bg-[#6366F1]"
-                    : "w-1.5 bg-white/20 hover:bg-white/40"
-                }`}
-                aria-label={`${i + 1}번 사진`}
+              <button key={i} onClick={() => setCurrent(i)}
+                className={`h-1.5 rounded-full transition-all duration-200 ${i === current ? "w-6 bg-[#6366F1]" : "w-1.5 bg-white/20 hover:bg-white/40"}`}
+                aria-label={`${i + 1}번`}
               />
             ))}
           </div>
-          <button
-            onClick={next}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-400 transition-colors hover:bg-white/15 hover:text-white"
-            aria-label="다음 사진"
-          >
+          <button onClick={next} className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-400 transition-colors hover:bg-white/15 hover:text-white" aria-label="다음">
             <ChevronRight className="h-5 w-5" />
           </button>
         </div>
       </div>
 
-      {/* 닫기 버튼 */}
-      <button
-        onClick={onClose}
+      <button onClick={onClose}
         className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-400 transition-colors hover:bg-white/15 hover:text-white"
         aria-label="닫기"
       >
@@ -165,22 +144,77 @@ function Lightbox({
   );
 }
 
-/* ── 갤러리 카드 ──────────────────────────────────── */
-function GalleryCard({
-  item,
-  onClick,
+/* ── 마르키 카드 ──────────────────────────────────── */
+function MarqueeCard({ item, onClick }: { item: GalleryItem; onClick: () => void }) {
+  return (
+    <div
+      onClick={onClick}
+      className="group relative h-52 w-72 shrink-0 cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-[#111]"
+    >
+      {item.src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={item.src}
+          alt={item.alt}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 grayscale group-hover:grayscale-0"
+        />
+      ) : (
+        <Placeholder alt={item.alt} />
+      )}
+      <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        <p className="w-full px-4 pb-4 text-sm font-semibold text-white">{item.alt}</p>
+      </div>
+    </div>
+  );
+}
+
+/* ── 인피니트 마르키 행 ───────────────────────────── */
+function MarqueeRow({
+  items,
+  direction = "left",
+  speed = 35,
+  onCardClick,
 }: {
-  item: GalleryItem;
-  onClick: () => void;
+  items: GalleryItem[];
+  direction?: "left" | "right";
+  speed?: number;
+  onCardClick: (globalIndex: number) => void;
 }) {
+  // 아이템을 3배로 복제해 끊김 없이 루프
+  const tripled = [...items, ...items, ...items];
+  const totalWidth = items.length * (288 + 16); // w-72 + gap-4
+
+  return (
+    <div className="overflow-hidden">
+      <motion.div
+        className="flex gap-4"
+        style={{ width: `${tripled.length * (288 + 16)}px` }}
+        animate={{ x: direction === "left" ? [-totalWidth, 0] : [0, -totalWidth] }}
+        transition={{ duration: speed * items.length, ease: "linear", repeat: Infinity }}
+      >
+        {tripled.map((item, i) => (
+          <MarqueeCard
+            key={`${item.id}-${i}`}
+            item={item}
+            onClick={() => onCardClick(i % items.length)}
+          />
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+/* ── 그리드 카드 (필터 뷰) ───────────────────────── */
+function GridCard({ item, onClick }: { item: GalleryItem; onClick: () => void }) {
   return (
     <motion.div
+      layout
       initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       onClick={onClick}
-      className="group relative cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-[#111] shadow-sm"
+      className="group relative cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-[#111]"
       style={{ aspectRatio: "4/3" }}
     >
       {item.src ? (
@@ -191,21 +225,10 @@ function GalleryCard({
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 grayscale group-hover:grayscale-0"
         />
       ) : (
-        <PhotoPlaceholder alt={item.alt} />
+        <Placeholder alt={item.alt} />
       )}
-
-      {/* 호버 오버레이 */}
       <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-        <div className="w-full px-4 pb-4">
-          <p className="text-sm font-semibold text-white">{item.alt}</p>
-        </div>
-      </div>
-
-      {/* 확대 아이콘 힌트 */}
-      <div className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-black/50 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
-        <svg className="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
-          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-        </svg>
+        <p className="w-full px-4 pb-4 text-sm font-semibold text-white">{item.alt}</p>
       </div>
     </motion.div>
   );
@@ -213,18 +236,34 @@ function GalleryCard({
 
 /* ── GallerySection ───────────────────────────────── */
 export default function GallerySection() {
+  const [activeCategory, setActiveCategory] = useState<Category>("전체");
+  const [lightboxItems, setLightboxItems] = useState<GalleryItem[]>([]);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const openLightbox = (items: GalleryItem[], index: number) => {
+    setLightboxItems(items);
+    setLightboxIndex(index);
+  };
+
+  const filteredItems =
+    activeCategory === "전체"
+      ? galleryData
+      : galleryData.filter((item) => item.category === activeCategory);
+
+  // 마르키용: 짝수/홀수 행으로 분할
+  const rowA = galleryData.filter((_, i) => i % 2 === 0);
+  const rowB = galleryData.filter((_, i) => i % 2 !== 0);
 
   return (
     <>
-      <section className="mx-auto max-w-6xl space-y-10">
+      <section className="space-y-10">
         {/* 헤더 */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="space-y-3"
+          className="mx-auto max-w-6xl space-y-3 px-6"
         >
           <span className="inline-flex items-center gap-2 rounded-full border border-[#6366F1]/30 bg-[#6366F1]/10 px-4 py-1.5 text-sm font-medium text-[#6366F1]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#6366F1]" />
@@ -239,39 +278,80 @@ export default function GallerySection() {
           </p>
         </motion.div>
 
-        {/* 모바일: 가로 스크롤 캐러셀 / sm+: 3~4열 그리드 */}
-        <div>
-          {/* 모바일 캐러셀 (sm 미만) */}
-          <div className="flex gap-4 overflow-x-auto pb-3 sm:hidden" style={{ scrollSnapType: "x mandatory" }}>
-            {galleryData.map((item, i) => (
-              <div
-                key={item.id}
-                className="w-[70vw] shrink-0"
-                style={{ scrollSnapAlign: "start" }}
+        {/* 카테고리 필터 */}
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="flex flex-wrap gap-2">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 ${
+                  activeCategory === cat
+                    ? "border-[#6366F1] bg-[#6366F1] text-white shadow-[0_0_16px_rgba(99,102,241,0.35)]"
+                    : "border-white/10 bg-white/[0.04] text-zinc-400 hover:border-[#6366F1]/40 hover:text-white"
+                }`}
               >
-                <GalleryCard item={item} onClick={() => setLightboxIndex(i)} />
-              </div>
-            ))}
-          </div>
-
-          {/* 데스크탑 그리드 (sm 이상) */}
-          <div className="hidden grid-cols-2 gap-4 sm:grid md:grid-cols-3 lg:grid-cols-4">
-            {galleryData.map((item, i) => (
-              <GalleryCard
-                key={item.id}
-                item={item}
-                onClick={() => setLightboxIndex(i)}
-              />
+                {cat}
+              </button>
             ))}
           </div>
         </div>
+
+        {/* 전체: 인피니트 마르키 두 줄 */}
+        {activeCategory === "전체" && (
+          <div className="space-y-4">
+            <MarqueeRow
+              items={rowA.length > 0 ? rowA : galleryData}
+              direction="left"
+              speed={8}
+              onCardClick={(i) => openLightbox(rowA.length > 0 ? rowA : galleryData, i)}
+            />
+            <MarqueeRow
+              items={rowB.length > 0 ? rowB : galleryData}
+              direction="right"
+              speed={10}
+              onCardClick={(i) => openLightbox(rowB.length > 0 ? rowB : galleryData, i)}
+            />
+          </div>
+        )}
+
+        {/* 카테고리 선택 시: 그리드 */}
+        {activeCategory !== "전체" && (
+          <div className="mx-auto max-w-6xl px-6">
+            <AnimatePresence mode="popLayout">
+              <motion.div
+                key={activeCategory}
+                className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
+              >
+                {filteredItems.length > 0 ? (
+                  filteredItems.map((item, i) => (
+                    <GridCard
+                      key={item.id}
+                      item={item}
+                      onClick={() => openLightbox(filteredItems, i)}
+                    />
+                  ))
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="col-span-full flex flex-col items-center gap-3 py-20 text-center"
+                  >
+                    <span className="text-4xl">📷</span>
+                    <p className="text-zinc-500">곧 사진이 업로드될 예정입니다.</p>
+                  </motion.div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        )}
       </section>
 
       {/* 라이트박스 */}
       <AnimatePresence>
         {lightboxIndex !== null && (
           <Lightbox
-            items={galleryData}
+            items={lightboxItems}
             index={lightboxIndex}
             onClose={() => setLightboxIndex(null)}
           />

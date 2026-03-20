@@ -347,7 +347,7 @@ function MemberCard({
 }
 
 /* ── 대표 인터뷰 블록 ─────────────────────────────── */
-const LEAD_PHOTO = ""; // 강동우님 사진 URL을 여기에 입력하세요
+const LEAD_PHOTO = "https://i.ibb.co/jBhhk4X/300397196-385255173754143-2569638798356540139-n.jpg";
 
 function LeadInterview() {
   return (
@@ -356,58 +356,69 @@ function LeadInterview() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#111111] shadow-[0_0_40px_rgba(99,102,241,0.08)]"
+      className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#0d0d0d]"
     >
-      {/* 상단 글로우 라인 */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#6366F1]/50 to-transparent"
-      />
+      {/* 글로우 라인 */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#6366F1]/60 to-transparent" />
       {/* 배경 글로우 */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-0 top-0 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#6366F1]/8 blur-3xl"
-      />
+      <div aria-hidden className="pointer-events-none absolute right-0 top-0 h-80 w-80 translate-x-1/3 -translate-y-1/3 rounded-full bg-[#6366F1]/6 blur-3xl" />
 
-      <div className="relative flex flex-col gap-8 p-8 sm:flex-row sm:items-center sm:gap-10 sm:p-10">
-        {/* 프로필 — 모바일: 가로 배치 / sm+: 세로 중앙 */}
-        <div className="flex flex-row items-center gap-5 sm:flex-col sm:items-center sm:gap-4 sm:text-center">
+      <div className="relative grid grid-cols-1 sm:grid-cols-[auto_1fr]">
+        {/* ── 왼쪽: 프로필 컬럼 ── */}
+        <div className="flex items-center gap-5 border-b border-white/5 p-8 sm:flex-col sm:items-center sm:gap-5 sm:border-b-0 sm:border-r sm:px-10 sm:py-12">
           {/* 사진 */}
-          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-[#6366F1]/40 bg-[#1a1a2e] shadow-[0_0_20px_rgba(99,102,241,0.2)] sm:h-28 sm:w-28">
-            {LEAD_PHOTO ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={LEAD_PHOTO} alt="강동우" className="h-full w-full object-cover" />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center">
-                <SilhouetteAvatar size="md" />
-              </div>
-            )}
+          <div className="relative h-20 w-20 shrink-0 sm:h-32 sm:w-32">
+            {/* 링 글로우 */}
+            <div className="absolute inset-0 rounded-full bg-[#6366F1]/20 blur-md" />
+            <div className="relative h-full w-full overflow-hidden rounded-full border-2 border-[#6366F1]/50">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={LEAD_PHOTO} alt="김민교" className="h-full w-full object-cover" />
+            </div>
           </div>
-          {/* 이름·직함 */}
-          <div className="sm:flex sm:flex-col sm:items-center sm:gap-1">
-            <p className="text-base font-bold text-white">강동우</p>
-            <p className="text-xs text-zinc-500">경성대 멋쟁이사자처럼 14기 대표</p>
-            <span className="mt-1 inline-block rounded-full border border-[#6366F1]/30 bg-[#6366F1]/10 px-2.5 py-0.5 text-[10px] font-semibold text-[#6366F1]">
+          {/* 텍스트 */}
+          <div className="flex flex-col gap-1 sm:items-center sm:text-center">
+            <span className="rounded-full border border-[#6366F1]/30 bg-[#6366F1]/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[#6366F1]">
               Lead
             </span>
+            <p className="mt-1 text-base font-extrabold text-white">김민교</p>
+            <p className="text-[11px] leading-relaxed text-zinc-500">
+              경성대 멋쟁이사자처럼<br className="hidden sm:block" /> 14기 대표
+            </p>
           </div>
         </div>
 
-        {/* 인터뷰 내용 */}
-        <div className="flex flex-1 flex-col gap-4">
-          <p className="text-xs font-bold uppercase tracking-widest text-zinc-600">
+        {/* ── 오른쪽: 인터뷰 컬럼 ── */}
+        <div className="relative flex flex-col justify-center gap-5 p-8 sm:p-10 sm:pl-12">
+          {/* 라벨 */}
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-600">
             Lead Interview
           </p>
-          <h3 className="text-xl font-extrabold leading-snug tracking-tight text-white sm:text-2xl">
-            "결과로 증명하는 14기의 여정,{" "}
-            <span className="text-[#6366F1]">우리가 함께 만듭니다.</span>"
+
+          {/* 큰 따옴표 장식 */}
+          <div className="absolute left-10 top-8 select-none text-[80px] font-black leading-none text-[#6366F1]/10 sm:left-12 sm:top-10 sm:text-[120px]">
+            "
+          </div>
+
+          {/* 제목 */}
+          <h3 className="relative text-xl font-extrabold leading-snug tracking-tight text-white sm:text-2xl lg:text-3xl">
+            결과로 증명하는 14기의 여정,{" "}
+            <span className="bg-gradient-to-r from-[#6366F1] to-[#818cf8] bg-clip-text text-transparent">
+              우리가 함께 만듭니다.
+            </span>
           </h3>
-          <p className="border-l-2 border-[#6366F1]/30 pl-4 text-sm leading-relaxed text-zinc-300">
+
+          {/* 본문 */}
+          <p className="text-sm leading-[1.9] text-zinc-400">
             경성대 멋사는 단순히 코딩을 배우는 곳이 아닙니다. 우리의 아이디어가 실제 서비스로
-            런칭되어 유저를 만나는 순간, 그 짜릿한 '결과'를 경험하는 곳입니다. 14기 여러분이
-            포기하지 않고 끝까지 실행할 수 있도록 최선을 다해 돕겠습니다. 우리와 함께 세상을
-            조금 더 편리하게 바꿔볼까요?
+            런칭되어 유저를 만나는 순간, 그 짜릿한 <span className="text-zinc-200">'결과'</span>를 경험하는 곳입니다.
+            14기 여러분이 포기하지 않고 끝까지 실행할 수 있도록 최선을 다해 돕겠습니다.
+            우리와 함께 세상을 조금 더 편리하게 바꿔볼까요?
           </p>
+
+          {/* 닫는 따옴표 */}
+          <div className="self-end select-none text-[40px] font-black leading-none text-[#6366F1]/15 sm:text-[60px]">
+            "
+          </div>
         </div>
       </div>
     </motion.div>
