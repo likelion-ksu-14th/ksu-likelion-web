@@ -17,17 +17,20 @@
 }
 
 html {
-  /* 최소 폰트 기준: 16px (브라우저 기본값 유지) */
   font-size: 16px;
+  background-color: #050505 !important;   /* 모바일 바운스 시 흰색 노출 방지 */
+  overscroll-behavior: none;              /* 바운스 스크롤 차단 */
 }
 
 body {
   background: var(--background);
+  background-color: #0A0A0A !important;
   color: var(--foreground);
   font-family: "Pretendard", sans-serif;
-  font-size: 1rem; /* = 16px */
+  font-size: 1rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;              /* iOS/Android 바운스 차단 */
 }
 
 /* 전역: 본문·설명글 최소 16px 강제 (데스크톱·모바일 공통) */

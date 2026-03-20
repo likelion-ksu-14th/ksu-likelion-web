@@ -8,6 +8,10 @@ import FloatingButtons from "@/components/FloatingButtons";
 export const metadata: Metadata = {
   title: "경성대 멋쟁이사자처럼",
   description: "상상을 실행으로, 결과로 증명하다",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+  },
   icons: {
     icon: "https://i.ibb.co/N6fYNjgK/634089595-17846193915688735-2807885536104229796-n-1.png?v=20260319",
     shortcut: "https://i.ibb.co/N6fYNjgK/634089595-17846193915688735-2807885536104229796-n-1.png?v=20260319",
@@ -36,6 +40,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  themeColor: "#050505",
 };
 
 export default function RootLayout({
