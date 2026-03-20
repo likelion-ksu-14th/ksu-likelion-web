@@ -9,17 +9,17 @@ import { motion, useInView } from "framer-motion";
 ──────────────────────────────────────────────────────────── */
 const FORCE_STYLES = `
   .impact-number {
-    font-size: clamp(4rem, 15vw, 12rem) !important;
+    font-size: clamp(4.5rem, 13vw, 9.5rem) !important;
     font-weight: 900 !important;
     line-height: 1 !important;
     letter-spacing: -0.04em !important;
     color: #22C55E !important;
     font-variant-numeric: tabular-nums !important;
     text-shadow:
-      0 0  28px rgba(34,197,94,0.95),
-      0 0  80px rgba(34,197,94,0.60),
-      0 0 180px rgba(34,197,94,0.28),
-      0  8px 24px rgba(0,0,0,0.98) !important;
+      0 0  24px rgba(34,197,94,0.95),
+      0 0  70px rgba(34,197,94,0.60),
+      0 0 150px rgba(34,197,94,0.28),
+      0  6px 20px rgba(0,0,0,0.98) !important;
     display: block !important;
   }
   .impact-label {
@@ -269,7 +269,7 @@ export default function ImpactSection() {
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "4rem 3rem",
+            gap: "4rem 4rem",
             alignItems: "start",
           }}>
             {stats.map((s, i) => (

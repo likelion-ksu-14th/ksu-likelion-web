@@ -334,9 +334,6 @@ export default function ProjectsPage() {
             <span className="rounded-full border border-[#6366F1]/30 bg-[#6366F1]/10 px-4 py-1.5 text-xs font-semibold text-[#6366F1]">
               Output Examples
             </span>
-            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-zinc-400">
-              13기 활동 결과물 예시
-            </span>
           </div>
 
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-[#6366F1]">
