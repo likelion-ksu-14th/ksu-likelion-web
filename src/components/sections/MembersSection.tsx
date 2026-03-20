@@ -346,6 +346,74 @@ function MemberCard({
   );
 }
 
+/* ── 대표 인터뷰 블록 ─────────────────────────────── */
+const LEAD_PHOTO = ""; // 강동우님 사진 URL을 여기에 입력하세요
+
+function LeadInterview() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#111111] shadow-[0_0_40px_rgba(99,102,241,0.08)]"
+    >
+      {/* 상단 글로우 라인 */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#6366F1]/50 to-transparent"
+      />
+      {/* 배경 글로우 */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-0 top-0 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#6366F1]/8 blur-3xl"
+      />
+
+      <div className="relative flex flex-col gap-8 p-8 sm:flex-row sm:items-center sm:gap-10 sm:p-10">
+        {/* 프로필 — 모바일: 가로 배치 / sm+: 세로 중앙 */}
+        <div className="flex flex-row items-center gap-5 sm:flex-col sm:items-center sm:gap-4 sm:text-center">
+          {/* 사진 */}
+          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-[#6366F1]/40 bg-[#1a1a2e] shadow-[0_0_20px_rgba(99,102,241,0.2)] sm:h-28 sm:w-28">
+            {LEAD_PHOTO ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={LEAD_PHOTO} alt="강동우" className="h-full w-full object-cover" />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center">
+                <SilhouetteAvatar size="md" />
+              </div>
+            )}
+          </div>
+          {/* 이름·직함 */}
+          <div className="sm:flex sm:flex-col sm:items-center sm:gap-1">
+            <p className="text-base font-bold text-white">강동우</p>
+            <p className="text-xs text-zinc-500">경성대 멋쟁이사자처럼 14기 대표</p>
+            <span className="mt-1 inline-block rounded-full border border-[#6366F1]/30 bg-[#6366F1]/10 px-2.5 py-0.5 text-[10px] font-semibold text-[#6366F1]">
+              Lead
+            </span>
+          </div>
+        </div>
+
+        {/* 인터뷰 내용 */}
+        <div className="flex flex-1 flex-col gap-4">
+          <p className="text-xs font-bold uppercase tracking-widest text-zinc-600">
+            Lead Interview
+          </p>
+          <h3 className="text-xl font-extrabold leading-snug tracking-tight text-white sm:text-2xl">
+            "결과로 증명하는 14기의 여정,{" "}
+            <span className="text-[#6366F1]">우리가 함께 만듭니다.</span>"
+          </h3>
+          <p className="border-l-2 border-[#6366F1]/30 pl-4 text-sm leading-relaxed text-zinc-300">
+            경성대 멋사는 단순히 코딩을 배우는 곳이 아닙니다. 우리의 아이디어가 실제 서비스로
+            런칭되어 유저를 만나는 순간, 그 짜릿한 '결과'를 경험하는 곳입니다. 14기 여러분이
+            포기하지 않고 끝까지 실행할 수 있도록 최선을 다해 돕겠습니다. 우리와 함께 세상을
+            조금 더 편리하게 바꿔볼까요?
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 /* ── 메인 섹션 ────────────────────────────────────── */
 export default function MembersSection() {
   const [active, setActive] = useState<FilterKey>("전체");
@@ -373,6 +441,9 @@ export default function MembersSection() {
             경성대 멋쟁이사자처럼 14기 — 아이디어를 현실로 만드는 사람들을 만나보세요.
           </p>
         </div>
+
+        {/* 대표 인터뷰 */}
+        <LeadInterview />
 
         {/* 필터 버튼 */}
         <div className="flex flex-wrap gap-2">
