@@ -1,12 +1,8 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion, type Variants } from "framer-motion";
-
-// Three.js scene — client-only, lazy loaded
-const HeroScene3D = dynamic(() => import("./HeroScene3D"), { ssr: false });
 
 // ─────────────────────────────────────────────────────────
 // Countdown hook
@@ -153,11 +149,10 @@ export default function HeroSection() {
   return (
     <section className="relative flex min-h-[90vh] max-h-[960px] items-center overflow-hidden md:min-h-[800px]">
 
-      {/* ── Layer 1: Background images ──────────────────── */}
-      {/* Mobile — vertical atmospheric image */}
-      <div aria-hidden className="absolute inset-0 md:hidden">
+      {/* ── 배경 이미지 ────────────────────────────────────── */}
+      <div aria-hidden className="absolute inset-0">
         <Image
-          src="https://i.ibb.co/CKy8wgHv/Chat-GPT-Image-2026-3-20-06-42-45.png"
+          src="https://i.ibb.co/Xfqf3b7L/image-a9caeb.jpg"
           alt=""
           fill
           priority
@@ -165,61 +160,38 @@ export default function HeroSection() {
           style={{ objectFit: "cover", objectPosition: "center" }}
         />
       </div>
-      {/* Desktop — wide panoramic image */}
-      <div aria-hidden className="absolute inset-0 hidden md:block">
-        <Image
-          src="/hero-lion.png"
-          alt=""
-          fill
-          priority
-          quality={85}
-          style={{ objectFit: "cover", objectPosition: "80% center" }}
-        />
-      </div>
 
-      {/* ── Layer 2: 3D Canvas ──────────────────────────── */}
-      {/* Mobile: full-screen / Desktop: right 58% of viewport */}
+      {/* ── 가독성 오버레이 ─────────────────────────────────── */}
+      {/* 모바일: 전체를 충분히 어둡게 */}
       <div
         aria-hidden
-        className="absolute inset-0 md:left-[42%]"
-        style={{ pointerEvents: "none" }}
-      >
-        <div className="absolute inset-0" style={{ pointerEvents: "all" }}>
-          <HeroScene3D />
-        </div>
-      </div>
-
-      {/* ── Layer 3: Readability overlays ──────────────── */}
-      {/* Mobile: top-heavy gradient so text is readable, centre opens for the logo */}
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/70 md:hidden"
+        className="absolute inset-0 bg-black/75 md:hidden"
       />
       <div
         aria-hidden
-        className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#0A0A0A] to-transparent md:hidden"
+        className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black to-transparent md:hidden"
       />
-      {/* Desktop: left gradient keeps text legible, right side stays open for the 3D logo */}
+      {/* 데스크톱: 좌측 텍스트 가독성 확보, 우측은 이미지 노출 */}
       <div
         aria-hidden
-        className="absolute inset-0 hidden bg-gradient-to-r from-black/80 via-black/20 to-transparent md:block"
+        className="absolute inset-0 hidden bg-gradient-to-r from-black/70 via-black/10 to-transparent md:block"
       />
       <div
         aria-hidden
         className="absolute inset-x-0 bottom-0 hidden h-32 bg-gradient-to-t from-[#0A0A0A] to-transparent md:block"
       />
 
-      {/* ── Indigo glow accent (desktop left) ──────────── */}
+      {/* ── 인디고 글로우 (데스크톱 좌측) ─────────────────── */}
       <div
         aria-hidden
         className="pointer-events-none absolute left-[-120px] top-1/2 hidden h-[600px] w-[600px] -translate-y-1/2 rounded-full bg-[#6366F1]/15 blur-[160px] md:block"
       />
 
-      {/* ── Layer 4: Text content ────────────────────────── */}
+      {/* ── 텍스트 콘텐츠 ───────────────────────────────────── */}
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-24 pt-16 md:px-16 md:py-20">
         <div className="flex flex-col items-center gap-3 text-center md:max-w-xl md:items-start md:gap-5 md:text-left">
 
-          {/* Badge */}
+          {/* 뱃지 */}
           <motion.div
             custom={0}
             initial="hidden"
@@ -234,7 +206,7 @@ export default function HeroSection() {
             경성대학교 멋쟁이사자처럼
           </motion.div>
 
-          {/* Typing slogan */}
+          {/* 타이핑 슬로건 */}
           <motion.div
             custom={0.1}
             initial="hidden"
@@ -272,7 +244,7 @@ export default function HeroSection() {
             </h1>
           </motion.div>
 
-          {/* Sub-copy */}
+          {/* 서브 카피 */}
           <motion.p
             custom={0.3}
             initial="hidden"
@@ -286,7 +258,7 @@ export default function HeroSection() {
             경성대 멋쟁이사자처럼과 함께 직접 만들고 증명하세요.
           </motion.p>
 
-          {/* Recruitment info badges */}
+          {/* 모집 정보 뱃지 */}
           <motion.div
             custom={0.38}
             initial="hidden"
@@ -302,7 +274,7 @@ export default function HeroSection() {
             </span>
           </motion.div>
 
-          {/* Countdown */}
+          {/* 카운트다운 */}
           <motion.div
             custom={0.42}
             initial="hidden"
@@ -312,7 +284,7 @@ export default function HeroSection() {
             <HeroCountdown />
           </motion.div>
 
-          {/* CTA buttons */}
+          {/* CTA 버튼 */}
           <motion.div
             custom={0.45}
             initial="hidden"
@@ -336,7 +308,7 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* ── Scroll indicator ────────────────────────────── */}
+      {/* ── 스크롤 인디케이터 ───────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
