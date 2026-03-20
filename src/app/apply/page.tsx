@@ -1,72 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   motion,
   AnimatePresence,
   type Transition,
   type TargetAndTransition,
 } from "framer-motion";
-
-/* ── D-Day 카운트다운 ──────────────────────────────────── */
-const DEADLINE = new Date("2026-03-24T23:59:59");
-
-function useDDay() {
-  const calc = () => {
-    const diff = DEADLINE.getTime() - Date.now();
-    if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, ended: true };
-    return {
-      days: Math.floor(diff / 86400000),
-      hours: Math.floor((diff % 86400000) / 3600000),
-      minutes: Math.floor((diff % 3600000) / 60000),
-      seconds: Math.floor((diff % 60000) / 1000),
-      ended: false,
-    };
-  };
-
-  const [time, setTime] = useState(calc);
-  useEffect(() => {
-    const id = setInterval(() => setTime(calc()), 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  return time;
-}
-
-function TimeUnit({ value, label }: { value: number; label: string }) {
-  return (
-    <div className="flex flex-col items-center">
-      <span className="tabular-nums text-3xl font-extrabold text-[#6366F1]">
-        {String(value).padStart(2, "0")}
-      </span>
-      <span className="mt-0.5 text-[10px] font-semibold uppercase tracking-widest text-zinc-600">
-        {label}
-      </span>
-    </div>
-  );
-}
-
-function Countdown() {
-  const { days, hours, minutes, seconds, ended } = useDDay();
-
-  if (ended) {
-    return (
-      <p className="text-sm font-bold text-zinc-500">모집이 마감되었습니다.</p>
-    );
-  }
-
-  return (
-    <div className="flex items-center gap-4">
-      <TimeUnit value={days} label="일" />
-      <span className="pb-4 text-2xl font-bold text-zinc-700">:</span>
-      <TimeUnit value={hours} label="시" />
-      <span className="pb-4 text-2xl font-bold text-zinc-700">:</span>
-      <TimeUnit value={minutes} label="분" />
-      <span className="pb-4 text-2xl font-bold text-zinc-700">:</span>
-      <TimeUnit value={seconds} label="초" />
-    </div>
-  );
-}
 
 /* ── 아코디언 ─────────────────────────────────────────── */
 const NOTICES = [
@@ -282,11 +222,14 @@ export default function ApplyPage() {
             <p className="mb-4 text-xs font-bold uppercase tracking-widest text-[#6366F1]">
               모집 기간
             </p>
-            <p className="mb-1 text-sm font-semibold text-white">
-              2026.03.01 – 2026.03.24
+            <p className="text-2xl font-extrabold text-white">
+              2026.03.01
             </p>
-            <p className="mb-5 text-xs text-zinc-500">마감까지 남은 시간</p>
-            <Countdown />
+            <p className="mt-1 text-sm text-zinc-500">–</p>
+            <p className="text-2xl font-extrabold text-white">
+              2026.03.24
+            </p>
+            <p className="mt-3 text-xs text-zinc-500">서류 마감 3월 24일 자정</p>
           </motion.div>
 
           {/* 지원 자격 */}

@@ -57,12 +57,11 @@ const TIMELINE = [
   {
     step: "03",
     period: "3월",
-    dateLabel: "March — 핵심",
+    dateLabel: "March",
     title: "아기사자 가입 마감 · 전체 OT · 교육 자료 지급",
     desc: "14기 아기사자 가입 서류 마감 (3월 24일)이 완료되고, 전체 OT와 함께 교육 자료가 지급됩니다. 본격적인 활동이 시작됩니다!",
     icon: "🦁",
     tags: ["모집", "행사"] as BadgeType[],
-    highlight: true,
   },
   {
     step: "04",
@@ -130,11 +129,9 @@ function CurriculumCard({
   const y       = useTransform(smooth, [0, 0.18, 0.82, 1], [40, 0, 0, -40]);
   const scale   = useTransform(smooth, [0, 0.18, 0.82, 1], [0.88, 1, 1, 0.88]);
 
-  const isHighlight = "highlight" in item && item.highlight;
-
   return (
     <motion.div ref={ref} style={{ opacity, x, y, scale }}>
-      <div className={`card-box group relative overflow-hidden rounded-[28px] p-8 md:p-10 ${isHighlight ? "highlight-card" : ""}`}>
+      <div className="card-box group relative overflow-hidden rounded-[28px] p-8 md:p-10">
         {/* shimmer */}
         <div className="shimmer pointer-events-none absolute inset-0" />
         {/* hover 글로우 */}
@@ -179,15 +176,6 @@ function CurriculumCard({
           {item.tags.map((tag) => <TagBadge key={tag} tag={tag} />)}
         </div>
 
-        {/* 핵심 강조 리본 */}
-        {isHighlight && (
-          <div
-            className="absolute right-4 top-4 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-widest"
-            style={{ background: "rgba(250,204,21,0.15)", color: "#facc15", border: "1px solid rgba(250,204,21,0.4)" }}
-          >
-            ★ 모집 마감
-          </div>
-        )}
       </div>
     </motion.div>
   );
@@ -341,16 +329,6 @@ export default function CurriculumPage() {
             0 0 40px rgba(249,115,22,0.12),
             inset 0 0 60px rgba(249,115,22,0.04);
         }
-        /* 핵심 카드(3월) 기본 테두리 강조 */
-        .highlight-card {
-          border-color: rgba(250, 204, 21, 0.30) !important;
-          box-shadow: 0 0 30px rgba(250,204,21,0.08);
-        }
-        .highlight-card:hover {
-          border-color: rgba(250, 204, 21, 0.55) !important;
-          box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(250,204,21,0.15) !important;
-        }
-
         /* ── STEP 텍스트 ────────────────────────────── */
         .step-text {
           background: linear-gradient(135deg, rgba(249,115,22,0.45), rgba(249,115,22,0.10));
