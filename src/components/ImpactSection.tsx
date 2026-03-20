@@ -111,7 +111,8 @@ function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps)
       <p
         className="tabular-nums font-black leading-none tracking-tighter text-[#22C55E]"
         style={{
-          fontSize: "clamp(4rem, 11vw, 8.5rem) !important",
+          fontSize: "clamp(3rem, 11vw, 8.5rem) !important",
+          wordBreak: "keep-all",
           textShadow: [
             "0 0  24px rgba(34,197,94,0.95)",   /* 코어 글로우 소폭 축소 */
             "0 0  70px rgba(34,197,94,0.65)",   /* 중간 확산 */
@@ -136,9 +137,10 @@ function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps)
       {/* ── 타이틀: 텍스트 크기 미세 조정 ── */}
       <p
         className="font-bold text-white"
-        style={{ 
+        style={{
             fontSize: "clamp(1.25rem, 2.2vw, 1.75rem) !important",
-            textShadow: "0 0 24px rgba(0,0,0,1), 0 2px 8px rgba(0,0,0,0.9)" 
+            textShadow: "0 0 24px rgba(0,0,0,1), 0 2px 8px rgba(0,0,0,0.9)",
+            wordBreak: "keep-all",
         }}
       >
         {label}
@@ -147,7 +149,7 @@ function StatCard({ target, suffix, label, sub, started, delay }: StatCardProps)
       {/* ── 설명 문구: 가독성 중심의 크기 ── */}
       <p 
         className="max-w-[260px] leading-relaxed tracking-wide text-zinc-400"
-        style={{ fontSize: "clamp(0.9rem, 1.2vw, 1rem) !important" }}
+        style={{ fontSize: "clamp(0.9rem, 1.2vw, 1rem) !important", wordBreak: "keep-all" }}
       >
         {sub}
       </p>
@@ -205,7 +207,7 @@ export default function ImpactSection() {
           </div>
           <h2 
             className="font-extrabold text-white"
-            style={{ fontSize: "clamp(2rem, 5vw, 4rem) !important" }}
+            style={{ fontSize: "clamp(2rem, 5vw, 4rem) !important", wordBreak: "keep-all" }}
           >
             숫자로 보는{" "}
             <span className="text-[#22C55E]">14기의 목표</span>
