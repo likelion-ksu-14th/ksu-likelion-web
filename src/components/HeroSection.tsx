@@ -65,14 +65,15 @@ export default function HeroSection() {
 
   return (
     <section className="relative flex min-h-[90vh] max-h-[960px] items-center overflow-hidden md:min-h-[800px]">
-      {/* ── 배경 이미지: 모바일 — center, scroll ── */}
+      {/* ── 배경 이미지: 모바일 — center, contain ── */}
       <div
         aria-hidden
         className="absolute inset-0 md:hidden"
         style={{
           backgroundImage: "url('/hero-lion.png')",
-          backgroundSize: "cover",
+          backgroundSize: "65%",
           backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
         }}
       />
       {/* ── 배경 이미지: 데스크톱 — 우측 치우침 + 패럴랙스 fixed ── */}
@@ -90,7 +91,7 @@ export default function HeroSection() {
       {/* ── 모바일 전용 오버레이 — 짙은 어둠으로 가독성 확보 ── */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-black/70 md:hidden"
+        className="absolute inset-0 bg-black/75 md:hidden"
       />
       {/* ── 모바일 전용 하단 그라데이션 — 텍스트 아래 공간 분리 ── */}
       <div
