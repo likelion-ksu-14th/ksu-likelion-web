@@ -177,16 +177,16 @@ export default function ApplyPage() {
   const [openCautionId, setOpenCautionId] = useState<string | null>(null);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#0A0A0A]">
-      {/* ── 배경 글로우 ── */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/4 rounded-full bg-[#6366F1]/10 blur-[140px]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute bottom-0 left-1/4 h-[400px] w-[400px] rounded-full bg-[#6366F1]/5 blur-[100px]"
-      />
+    <main className="relative min-h-screen bg-[#0A0A0A]">
+      {/* ── 배경 글로우 (overflow-x-clip으로 수평 스크롤만 차단) ── */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-x-clip">
+        <div
+          className="absolute left-1/2 top-0 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/4 rounded-full bg-[#6366F1]/10 blur-[140px]"
+        />
+        <div
+          className="absolute bottom-0 left-1/4 h-[400px] w-[400px] rounded-full bg-[#6366F1]/5 blur-[100px]"
+        />
+      </div>
 
       <div className="relative z-10 mx-auto max-w-4xl px-6 pb-24 pt-40">
         {/* ── 헤더 ── */}
@@ -217,7 +217,7 @@ export default function ApplyPage() {
           {/* 모집 기간 */}
           <motion.div
             {...fadeUp(0.1)}
-            className="flex flex-col items-center rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center"
+            className="flex flex-col items-center rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center shadow-[0_-12px_40px_12px_rgba(99,102,241,0.15)]"
           >
             <p className="mb-5 text-xs font-bold uppercase tracking-widest text-[#6366F1]">
               모집 기간
