@@ -181,7 +181,7 @@ export default function ApplyPage() {
       {/* ── 배경 글로우 (overflow-x-clip으로 수평 스크롤만 차단) ── */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-x-clip">
         <div
-          className="absolute left-1/2 top-0 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/4 rounded-full bg-[#6366F1]/10 blur-[140px]"
+          className="absolute left-1/2 top-0 h-[320px] w-[320px] -translate-x-1/2 -translate-y-1/4 rounded-full bg-[#6366F1]/10 blur-[100px] md:h-[700px] md:w-[700px] md:blur-[140px]"
         />
         <div
           className="absolute bottom-0 left-1/4 h-[400px] w-[400px] rounded-full bg-[#6366F1]/5 blur-[100px]"
