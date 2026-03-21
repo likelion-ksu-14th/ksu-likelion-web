@@ -217,7 +217,7 @@ export default function ApplyPage() {
           {/* 모집 기간 */}
           <motion.div
             {...fadeUp(0.1)}
-            className="flex flex-col items-center rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center shadow-[0_-12px_40px_12px_rgba(99,102,241,0.15)]"
+            className="flex flex-col items-center rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center shadow-[0_-5px_70px_0px_rgba(99,102,241,0.08)]"
           >
             <p className="mb-5 text-xs font-bold uppercase tracking-widest text-[#6366F1]">
               모집 기간
